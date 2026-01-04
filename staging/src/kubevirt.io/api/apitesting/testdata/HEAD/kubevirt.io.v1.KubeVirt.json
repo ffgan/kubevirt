@@ -184,6 +184,13 @@
           ],
           "machineType": "machineTypeValue"
         },
+        "riscv64": {
+          "ovmfPath": "ovmfPathValue",
+          "emulatedMachines": [
+            "emulatedMachinesValue"
+          ],
+          "machineType": "machineTypeValue"
+        },
         "ppc64le": {
           "ovmfPath": "ovmfPathValue",
           "emulatedMachines": [

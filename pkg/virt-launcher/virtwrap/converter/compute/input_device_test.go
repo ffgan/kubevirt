@@ -58,9 +58,11 @@ var _ = Describe("Input Device Configurator", func() {
 		},
 			Entry("with USB bus on amd64", "amd64", v1.InputBusUSB, ""),
 			Entry("with USB bus on arm64", "arm64", v1.InputBusUSB, ""),
+			Entry("with USB bus on riscv64", "riscv64", v1.InputBusUSB, ""),
 			Entry("with USB bus on s390x", "s390x", v1.InputBusUSB, ""),
 			Entry("with virtio bus on amd64", "amd64", v1.InputBusVirtio, v1.VirtIO),
 			Entry("with virtio bus on arm64", "arm64", v1.InputBusVirtio, v1.VirtIO),
+			Entry("with virtio bus on riscv64", "riscv64", v1.InputBusVirtio, v1.VirtIO),
 			Entry("with virtio bus on s390x", "s390x", v1.InputBusVirtio, v1.VirtIO),
 		)
 
@@ -108,6 +110,14 @@ var _ = Describe("Input Device Configurator", func() {
 				{Type: "tablet", Bus: "usb"},
 				{Type: "keyboard", Bus: "usb"},
 			}),
+			Entry("riscv64 adds tablet and keyboard when nil", "riscv64", nil, []api.Input{
+				{Type: "tablet", Bus: "usb"},
+				{Type: "keyboard", Bus: "usb"},
+			}),
+			Entry("riscv64 adds tablet and keyboard when true", "riscv64", pointer.P(true), []api.Input{
+				{Type: "tablet", Bus: "usb"},
+				{Type: "keyboard", Bus: "usb"},
+			}),
 			Entry("s390x adds virtio keyboard when nil", "s390x", nil, []api.Input{
 				{Type: "keyboard", Bus: "virtio"},
 			}),
@@ -129,6 +139,7 @@ var _ = Describe("Input Device Configurator", func() {
 			},
 			Entry("amd64", "amd64"),
 			Entry("arm64", "arm64"),
+			Entry("riscv64", "riscv64"),
 			Entry("s390x", "s390x"),
 		)
 	})

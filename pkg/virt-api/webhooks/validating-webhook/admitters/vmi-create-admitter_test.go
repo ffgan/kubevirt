@@ -494,6 +494,7 @@ var _ = Describe("Validating VMICreate Admitter", func() {
 		},
 			Entry("when architecture is amd64", "amd64", "q35"),
 			Entry("when architecture is arm64", "arm64", "virt"),
+			Entry("when architecture is riscv64", "riscv64", "virt"),
 			Entry("when architecture is s390x", "s390x", "s390-ccw-virtio"),
 		)
 
@@ -511,6 +512,7 @@ var _ = Describe("Validating VMICreate Admitter", func() {
 			Entry("Wrong prefix amd64 q35", "amd64", "test-q35"),
 			Entry("Wrong prefix amd64 pc-q35", "amd64", "test-pc-q35"),
 			Entry("Wrong prefix arm64", "arm64", "test-virt"),
+			Entry("Wrong prefix riscv64", "riscv64", "test-virt"),
 			Entry("Wrong prefix s390x", "s390x", "test-s390-ccw-virtio"),
 		)
 
@@ -1622,6 +1624,26 @@ var _ = Describe("Validating VMICreate Admitter", func() {
 			Expect(causes).To(BeEmpty())
 		})
 
+		It("should reject vmi with threads > 1 for riscv64 arch", func() {
+			vmi.Spec.Domain.CPU.Threads = 2
+			vmi.Spec.Architecture = "riscv64"
+			causes := ValidateVirtualMachineInstanceSpec(k8sfield.NewPath("fake"), &vmi.Spec, config)
+			Expect(causes).To(ContainElement(
+				metav1.StatusCause{
+					Type:    metav1.CauseTypeFieldValueInvalid,
+					Field:   "fake.architecture",
+					Message: "threads must not be greater than 1 at fake.domain.cpu.threads (got 2) when fake.architecture is riscv64",
+				},
+			))
+		})
+
+		It("should accept vmi with threads == 1 for riscv64 arch", func() {
+			vmi.Spec.Domain.CPU.Threads = 1
+			vmi.Spec.Architecture = "riscv64"
+			causes := ValidateVirtualMachineInstanceSpec(k8sfield.NewPath("fake"), &vmi.Spec, config)
+			Expect(causes).To(BeEmpty())
+		})
+
 		It("should accept vmi with threads > 1 for amd64 arch", func() {
 			vmi.Spec.Domain.CPU.Threads = 2
 			vmi.Spec.Architecture = "amd64"
@@ -2477,6 +2499,92 @@ var _ = Describe("Validating VMICreate Admitter", func() {
 			Expect(causes).To(HaveLen(1))
 			Expect(causes[0].Field).To(Equal("fake.domain.devices.sound"))
 			Expect(causes[0].Message).To(Equal("Arm64 not support sound device"))
+		})
+	})
+
+	Context("with verification for Riscv64", func() {
+		It("should reject BIOS bootloader", func() {
+			vmi := api.NewMinimalVMI("testvmi")
+			vmi.Spec.Domain.Firmware = &v1.Firmware{
+				Bootloader: &v1.Bootloader{
+					BIOS: &v1.BIOS{},
+				},
+			}
+
+			causes := webhooks.ValidateVirtualMachineInstanceRiscv64Setting(k8sfield.NewPath("fake"), &vmi.Spec)
+			Expect(causes).To(HaveLen(1))
+			Expect(causes[0].Field).To(Equal("fake.domain.firmware.bootloader.bios"))
+			Expect(causes[0].Message).To(Equal("Riscv64 does not support bios boot, please change to uefi boot"))
+		})
+
+		// When setting UEFI default bootloader, UEFI secure bootloader would be applied which is not supported on Riscv64
+		It("should reject UEFI default bootloader", func() {
+			vmi := api.NewMinimalVMI("testvmi")
+			vmi.Spec.Domain.Firmware = &v1.Firmware{
+				Bootloader: &v1.Bootloader{
+					EFI: &v1.EFI{},
+				},
+			}
+
+			causes := webhooks.ValidateVirtualMachineInstanceRiscv64Setting(k8sfield.NewPath("fake"), &vmi.Spec)
+			Expect(causes).To(HaveLen(1))
+			Expect(causes[0].Field).To(Equal("fake.domain.firmware.bootloader.efi.secureboot"))
+			Expect(causes[0].Message).To(Equal("UEFI secure boot is currently not supported on riscv64 Arch"))
+		})
+
+		It("should reject UEFI secure bootloader", func() {
+			vmi := api.NewMinimalVMI("testvmi")
+
+			vmi.Spec.Domain.Firmware = &v1.Firmware{
+				Bootloader: &v1.Bootloader{
+					EFI: &v1.EFI{
+						SecureBoot: pointer.P(true),
+					},
+				},
+			}
+
+			causes := webhooks.ValidateVirtualMachineInstanceRiscv64Setting(k8sfield.NewPath("fake"), &vmi.Spec)
+			Expect(causes).To(HaveLen(1))
+			Expect(causes[0].Field).To(Equal("fake.domain.firmware.bootloader.efi.secureboot"))
+			Expect(causes[0].Message).To(Equal("UEFI secure boot is currently not supported on riscv64 Arch"))
+		})
+
+		It("should reject setting cpu model to host-model", func() {
+			vmi := api.NewMinimalVMI("testvmi")
+			vmi.Spec.Domain.CPU = &v1.CPU{Model: "host-model"}
+
+			causes := webhooks.ValidateVirtualMachineInstanceRiscv64Setting(k8sfield.NewPath("fake"), &vmi.Spec)
+			Expect(causes).To(HaveLen(1))
+			Expect(causes[0].Field).To(Equal("fake.domain.cpu.model"))
+			Expect(causes[0].Message).To(Equal("Riscv64 not support CPU host-model"))
+		})
+
+		It("should reject setting watchdog device", func() {
+			vmi := api.NewMinimalVMI("testvmi")
+			vmi.Spec.Domain.Devices.Watchdog = &v1.Watchdog{
+				Name: "mywatchdog",
+				WatchdogDevice: v1.WatchdogDevice{
+					I6300ESB: &v1.I6300ESBWatchdog{
+						Action: v1.WatchdogActionPoweroff,
+					},
+				},
+			}
+			causes := webhooks.ValidateVirtualMachineInstanceRiscv64Setting(k8sfield.NewPath("fake"), &vmi.Spec)
+			Expect(causes).To(HaveLen(1))
+			Expect(causes[0].Field).To(Equal("fake.domain.devices.watchdog"))
+			Expect(causes[0].Message).To(Equal("Riscv64 not support Watchdog device"))
+		})
+
+		It("should reject setting sound device", func() {
+			vmi := api.NewMinimalVMI("testvmi")
+			vmi.Spec.Domain.Devices.Sound = &v1.SoundDevice{
+				Name:  "test-audio-device",
+				Model: "ich9",
+			}
+			causes := webhooks.ValidateVirtualMachineInstanceRiscv64Setting(k8sfield.NewPath("fake"), &vmi.Spec)
+			Expect(causes).To(HaveLen(1))
+			Expect(causes[0].Field).To(Equal("fake.domain.devices.sound"))
+			Expect(causes[0].Message).To(Equal("Riscv64 not support sound device"))
 		})
 	})
 

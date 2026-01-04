@@ -21,3 +21,27 @@ platform(
         "@platforms//os:linux",
     ],
 )
+
+platform(
+    name = "riscv64-aarch64-linux-gnu",
+    constraint_values = [
+        "@platforms//cpu:riscv64",
+        "@platforms//os:linux",
+    ],
+)
+
+platform(
+    name = "riscv64-x86_64-linux-gnu",
+    constraint_values = [
+        "@platforms//cpu:riscv64",
+        "@platforms//os:linux",
+    ],
+)
+
+platform(
+    name = "riscv64-local-linux-gnu",
+    constraint_values = [
+        "@platforms//cpu:riscv64",
+        "@platforms//os:linux",
+    ],
+)

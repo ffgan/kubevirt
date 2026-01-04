@@ -47,6 +47,7 @@ var _ = Describe("Graphics Domain Configurator", func() {
 		},
 			Entry("on amd64", "amd64"),
 			Entry("on arm64", "arm64"),
+			Entry("on riscv64", "riscv64"),
 			Entry("on s390x", "s390x"),
 		)
 
@@ -79,9 +80,11 @@ var _ = Describe("Graphics Domain Configurator", func() {
 		},
 			Entry("amd64 when AutoattachGraphicsDevice is true", "amd64", pointer.P(true), newExpectedAMD64VideoDevice()),
 			Entry("arm64 when AutoattachGraphicsDevice is true", "arm64", pointer.P(true), newExpectedARM64VideoDevice()),
+			Entry("riscv64 when AutoattachGraphicsDevice is true", "riscv64", pointer.P(true), newExpectedRISCV64VideoDevice()),
 			Entry("s390x when AutoattachGraphicsDevice is true", "s390x", pointer.P(true), newExpectedS390XVideoDevice()),
 			Entry("amd64 when AutoattachGraphicsDevice is nil", "amd64", nil, newExpectedAMD64VideoDevice()),
 			Entry("arm64 when AutoattachGraphicsDevice is nil", "arm64", nil, newExpectedARM64VideoDevice()),
+			Entry("riscv64 when AutoattachGraphicsDevice is nil", "riscv64", nil, newExpectedRISCV64VideoDevice()),
 			Entry("s390x when AutoattachGraphicsDevice is nil", "s390x", nil, newExpectedS390XVideoDevice()),
 		)
 	})
@@ -125,6 +128,8 @@ var _ = Describe("Graphics Domain Configurator", func() {
 			Entry("on amd64 without bochsForEFI", "amd64", false),
 			Entry("on arm64 with bochsForEFI", "arm64", true),
 			Entry("on arm64 without bochsForEFI", "arm64", false),
+			Entry("on riscv64 with bochsForEFI", "riscv64", true),
+			Entry("on riscv64 without bochsForEFI", "riscv64", false),
 			Entry("on s390x with bochsForEFI", "s390x", true),
 			Entry("on s390x without bochsForEFI", "s390x", false),
 		)
@@ -214,6 +219,15 @@ func newExpectedAMD64VideoDevice() api.Video {
 }
 
 func newExpectedARM64VideoDevice() api.Video {
+	return api.Video{
+		Model: api.VideoModel{
+			Type:  v1.VirtIO,
+			Heads: pointer.P(uint(1)),
+		},
+	}
+}
+
+func newExpectedRISCV64VideoDevice() api.Video {
 	return api.Video{
 		Model: api.VideoModel{
 			Type:  v1.VirtIO,

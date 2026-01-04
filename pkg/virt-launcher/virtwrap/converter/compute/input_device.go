@@ -102,6 +102,21 @@ func (i InputDeviceDomainConfigurator) addArchitectureSpecificInputDevices(vmi *
 				Type: "keyboard",
 			},
 		)
+	case "riscv64":
+		if !hasTabletDevice(vmi) {
+			domain.Spec.Devices.Inputs = append(domain.Spec.Devices.Inputs,
+				api.Input{
+					Bus:  "usb",
+					Type: "tablet",
+				},
+			)
+		}
+		domain.Spec.Devices.Inputs = append(domain.Spec.Devices.Inputs,
+			api.Input{
+				Bus:  "usb",
+				Type: "keyboard",
+			},
+		)
 	case "s390x":
 		domain.Spec.Devices.Inputs = append(domain.Spec.Devices.Inputs,
 			api.Input{

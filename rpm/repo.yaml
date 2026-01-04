@@ -35,3 +35,15 @@ repositories:
   baseurl: http://mirror.stream.centos.org/9-stream/CRB/s390x/os/
   name: centos/stream9-crb-s390x
   gpgkey: https://www.centos.org/keys/RPM-GPG-KEY-CentOS-Official
+- arch: riscv64
+  baseurl: https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/
+  name: openEuler/everything-riscv64
+  gpgkey: https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/RPM-GPG-KEY-openEuler
+- arch: riscv64
+  baseurl: https://repo.openeuler.org/openEuler-24.03-LTS/OS/riscv64
+  name: openEuler/OS-riscv64
+  gpgkey: https://repo.openeuler.org/openEuler-24.03-LTS/OS/riscv64/RPM-GPG-KEY-openEuler
+- arch: riscv64
+  baseurl: https://repo.openeuler.org/openEuler-24.03-LTS/EPOL/main/riscv64/
+  name: openEuler/EPOL-riscv64
+  gpgkey: https://repo.openeuler.org/openEuler-24.03-LTS/EPOL/main/riscv64/RPM-GPG-KEY-openEuler

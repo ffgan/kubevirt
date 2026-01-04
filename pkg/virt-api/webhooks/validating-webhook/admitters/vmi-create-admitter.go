@@ -161,6 +161,8 @@ func ValidateVirtualMachineInstancePerArch(field *k8sfield.Path, spec *v1.Virtua
 		causes = append(causes, webhooks.ValidateVirtualMachineInstanceS390XSetting(field, spec)...)
 	case "arm64":
 		causes = append(causes, webhooks.ValidateVirtualMachineInstanceArm64Setting(field, spec)...)
+	case "riscv64":
+		causes = append(causes, webhooks.ValidateVirtualMachineInstanceRiscv64Setting(field, spec)...)
 	default:
 		causes = append(causes, metav1.StatusCause{
 			Type:    metav1.CauseTypeFieldValueInvalid,
@@ -745,6 +747,20 @@ func validateThreadCountOnArchitecture(field *k8sfield.Path, spec *v1.VirtualMac
 			Field: field.Child("architecture").String(),
 		})
 	}
+
+	// Verify CPU thread count requested is 1 for RISCV64 VMI architecture.
+	if spec.Domain.CPU != nil && spec.Domain.CPU.Threads > 1 && virtconfig.IsRISCV64(arch) {
+		causes = append(causes, metav1.StatusCause{
+			Type: metav1.CauseTypeFieldValueInvalid,
+			Message: fmt.Sprintf("threads must not be greater than 1 at %v (got %v) when %v is riscv64",
+				field.Child("domain", "cpu", "threads").String(),
+				spec.Domain.CPU.Threads,
+				field.Child("architecture").String(),
+			),
+			Field: field.Child("architecture").String(),
+		})
+	}
+
 	return causes
 }
 

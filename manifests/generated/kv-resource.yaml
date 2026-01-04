@@ -183,6 +183,18 @@ spec:
                           ovmfPath:
                             type: string
                         type: object
+                      riscv64:
+                        properties:
+                          emulatedMachines:
+                            items:
+                              type: string
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          machineType:
+                            type: string
+                          ovmfPath:
+                            type: string
+                        type: object
                       s390x:
                         properties:
                           emulatedMachines:
@@ -3560,6 +3572,18 @@ spec:
                       ppc64le:
                         description: 'Deprecated: ppc64le architecture is no longer
                           supported.'
+                        properties:
+                          emulatedMachines:
+                            items:
+                              type: string
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          machineType:
+                            type: string
+                          ovmfPath:
+                            type: string
+                        type: object
+                      riscv64:
                         properties:
                           emulatedMachines:
                             items:

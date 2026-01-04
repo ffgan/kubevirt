@@ -50,8 +50,11 @@ aarch64* | arm64*)
 s390x)
     ARCH="s390x"
     ;;
+riscv64)
+    ARCH="riscv64"
+    ;;
 *)
-    echo "invalid Arch, only support x86_64, aarch64 and s390x"
+    echo "invalid Arch, only support x86_64, aarch64, riscv64 and s390x"
     exit 1
     ;;
 esac

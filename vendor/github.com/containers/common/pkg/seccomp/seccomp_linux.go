@@ -49,6 +49,7 @@ func LoadProfileFromConfig(config *Seccomp, specgen *specs.Spec) (*specs.LinuxSe
 var nativeToSeccomp = map[string]Arch{
 	"amd64":       ArchX86_64,
 	"arm64":       ArchAARCH64,
+	"riscv64":     ArchRISCV64,
 	"mips64":      ArchMIPS64,
 	"mips64n32":   ArchMIPS64N32,
 	"mipsel64":    ArchMIPSEL64,

@@ -28,28 +28,37 @@ go_binary(
     x_defs = version_x_defs(),
 )
 
-go_binary(
-    name = "virtctl-darwin",
-    embed = [":go_default_library"],
-    goarch = "amd64",
-    goos = "darwin",
-    visibility = ["//visibility:public"],
-    x_defs = version_x_defs(),
-)
+# go_binary(
+#     name = "virtctl-darwin",
+#     embed = [":go_default_library"],
+#     goarch = "amd64",
+#     goos = "darwin",
+#     visibility = ["//visibility:public"],
+#     x_defs = version_x_defs(),
+# )
 
-go_binary(
-    name = "virtctl-windows",
-    embed = [":go_default_library"],
-    goarch = "amd64",
-    goos = "windows",
-    visibility = ["//visibility:public"],
-    x_defs = version_x_defs(),
-)
+# go_binary(
+#     name = "virtctl-windows",
+#     embed = [":go_default_library"],
+#     goarch = "amd64",
+#     goos = "windows",
+#     visibility = ["//visibility:public"],
+#     x_defs = version_x_defs(),
+# )
 
 go_binary(
     name = "virtctl-arm64",
     embed = [":go_default_library"],
     goarch = "arm64",
+    goos = "linux",
+    visibility = ["//visibility:public"],
+    x_defs = version_x_defs(),
+)
+
+go_binary(
+    name = "virtctl-riscv64",
+    embed = [":go_default_library"],
+    goarch = "riscv64",
     goos = "linux",
     visibility = ["//visibility:public"],
     x_defs = version_x_defs(),
@@ -64,11 +73,11 @@ go_binary(
     x_defs = version_x_defs(),
 )
 
-go_binary(
-    name = "virtctl-darwin-arm64",
-    embed = [":go_default_library"],
-    goarch = "arm64",
-    goos = "darwin",
-    visibility = ["//visibility:public"],
-    x_defs = version_x_defs(),
-)
+# go_binary(
+#     name = "virtctl-darwin-arm64",
+#     embed = [":go_default_library"],
+#     goarch = "arm64",
+#     goos = "darwin",
+#     visibility = ["//visibility:public"],
+#     x_defs = version_x_defs(),
+# )

@@ -18,6 +18,10 @@ SWTPM_VERSION=${SWTPM_VERSION:-0:0.8.0-2.el9}
 SINGLE_ARCH=${SINGLE_ARCH:-""}
 BASESYSTEM=${BASESYSTEM:-"centos-stream-release"}
 
+if [ "${SINGLE_ARCH}" == "riscv64" ]; then
+    BASESYSTEM="openEuler-repos"
+fi
+
 bazeldnf_repos="--repofile rpm/repo.yaml"
 if [ "${CUSTOM_REPO}" ]; then
     bazeldnf_repos="--repofile ${CUSTOM_REPO} ${bazeldnf_repos}"
@@ -49,6 +53,19 @@ centos_extra="
   libcurl-minimal
 "
 
+openeuler_main="
+  acl
+  curl
+  vim-minimal
+"
+openeuler_extra="
+  coreutils
+  glibc-all-langpacks
+  libcurl
+  chkconfig
+"
+# chkconfig
+
 # create a rpmtree for our test image with misc. tools.
 testimage_main="
   device-mapper
@@ -58,6 +75,19 @@ testimage_main="
   procps-ng
   qemu-img-${QEMU_VERSION}
   sevctl
+  tar
+  targetcli
+  util-linux
+  which
+"
+
+testimage_main_riscv64="
+  device-mapper
+  e2fsprogs
+  iputils
+  nmap
+  procps-ng
+  qemu-img
   tar
   targetcli
   util-linux
@@ -75,12 +105,30 @@ libvirtdevel_extra="
   lz4-libs
 "
 
+libvirtdevel_main_riscv64="
+  libvirt-devel
+"
+libvirtdevel_extra_riscv64="
+  keyutils-libs
+  krb5-libs
+  libmount
+  lz4
+"
+
 # TODO: Remove the sssd-client and use a better sssd config
 # This requires a way to inject files into the sandbox via bazeldnf
 sandboxroot_main="
   findutils
   gcc
   glibc-static
+  python3
+  sssd-client
+"
+
+sandboxroot_main_riscv64="
+  findutils
+  gcc
+  glibc-devel
   python3
   sssd-client
 "
@@ -93,6 +141,15 @@ launcherbase_main="
   qemu-kvm-core-${QEMU_VERSION}
   qemu-kvm-device-usb-host-${QEMU_VERSION}
   swtpm-tools-${SWTPM_VERSION}
+"
+launcherbase_main_riscv64="
+  libvirt-client
+ libvirt-daemon-driver-qemu
+  qemu
+  qemu-hw-usb-host
+  swtpm-tools
+  edk2-ovmf-riscv64
+  passt
 "
 launcherbase_x86_64="
   edk2-ovmf-${EDK2_VERSION}
@@ -107,6 +164,11 @@ launcherbase_aarch64="
   qemu-kvm-device-usb-redirect-${QEMU_VERSION}
   qemu-kvm-device-display-virtio-gpu-${QEMU_VERSION}
   qemu-kvm-device-display-virtio-gpu-pci-${QEMU_VERSION}
+"
+launcherbase_riscv64="
+  edk2-devel
+  qemu
+  edk2-ovmf-riscv64
 "
 launcherbase_s390x="
   qemu-kvm-device-display-virtio-gpu-${QEMU_VERSION}
@@ -124,10 +186,37 @@ launcherbase_extra="
   xorriso
 "
 
+launcherbase_extra_riscv64="
+  ethtool
+  findutils
+  nftables
+  nmap
+  procps-ng
+  selinux-policy
+  selinux-policy-targeted
+  tar
+  virtiofsd
+  xorriso
+"
+
 handlerbase_main="
   qemu-img-${QEMU_VERSION}
 "
+handlerbase_main_riscv64="
+  qemu-img
+"
 handlerbase_extra="
+  findutils
+  iproute
+  nftables
+  procps-ng
+  selinux-policy
+  selinux-policy-targeted
+  tar
+  util-linux
+  xorriso
+"
+handlerbase_extra_riscv64="
   findutils
   iproute
   nftables
@@ -164,6 +253,10 @@ exportserverbase_main="
 
 pr_helper="
   qemu-pr-helper
+"
+
+pr_helper_riscv64="
+  qemu
 "
 
 sidecar_shim="
@@ -568,4 +661,127 @@ if [ -z "${SINGLE_ARCH}" ] || [ "${SINGLE_ARCH}" == "s390x" ]; then
     # regenerate sandboxes
     rm ${SANDBOX_DIR} -rf
     kubevirt::bootstrap::regenerate s390x
+fi
+
+if [ -z "${SINGLE_ARCH}" ] || [ "${SINGLE_ARCH}" == "riscv64" ]; then
+
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name testimage_riscv64 --arch riscv64 \
+        --basesystem ${BASESYSTEM} \
+        ${bazeldnf_repos} \
+        $openeuler_main \
+        $openeuler_extra \
+        $testimage_main_riscv64
+
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name libvirt-devel_riscv64 --arch riscv64 \
+        --basesystem ${BASESYSTEM} \
+        ${bazeldnf_repos} \
+        $openeuler_main \
+        $openeuler_extra \
+        $libvirtdevel_main_riscv64 \
+        $libvirtdevel_extra_riscv64
+
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name sandboxroot_riscv64 --arch riscv64 \
+        --basesystem ${BASESYSTEM} \
+        ${bazeldnf_repos} \
+        $openeuler_main \
+        $openeuler_extra \
+        $sandboxroot_main_riscv64
+
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name passt_tree_riscv64 --arch riscv64 \
+        --basesystem ${BASESYSTEM} \
+        ${bazeldnf_repos} \
+        passt-${PASST_VERSION}
+
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name launcherbase_riscv64 --arch riscv64 \
+        --basesystem ${BASESYSTEM} \
+        --force-ignore-with-dependencies '^mozjs60' \
+        --force-ignore-with-dependencies 'python' \
+        ${bazeldnf_repos} \
+        $openeuler_main \
+        $openeuler_extra \
+        $launcherbase_main_riscv64 \
+        $launcherbase_riscv64 \
+        $launcherbase_extra_riscv64
+
+    # create a rpmtree for virt-handler
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name handlerbase_riscv64 --arch riscv64 \
+        --basesystem ${BASESYSTEM} \
+        --force-ignore-with-dependencies 'python' \
+        ${bazeldnf_repos} \
+        $openeuler_main \
+        $openeuler_extra \
+        $handlerbase_main_riscv64 \
+        $handlerbase_extra_riscv64
+
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name exportserverbase_riscv64 --arch riscv64 \
+        --basesystem ${BASESYSTEM} \
+        ${bazeldnf_repos} \
+        $openeuler_main \
+        $openeuler_extra \
+        $exportserverbase_main
+
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name pr-helper_riscv64 \
+        --basesystem ${BASESYSTEM} \
+        ${bazeldnf_repos} \
+        $openeuler_main \
+        $openeuler_extra \
+        $pr_helper_riscv64
+
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- rpmtree \
+        --public --nobest \
+        --name sidecar-shim_riscv64 --arch riscv64 \
+        --basesystem ${BASESYSTEM} \
+        ${bazeldnf_repos} \
+        $openeuler_main \
+        $openeuler_extra \
+        $sidecar_shim
+
+    # remove all RPMs which are no longer referenced by a rpmtree
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //:bazeldnf -- prune
+
+    # update tar2files targets which act as an adapter between rpms
+    # and cc_library which we need for virt-launcher and virt-handler
+    bazel run \
+        --config=${ARCHITECTURE} \
+        //rpm:ldd_riscv64
+
+    # regenerate sandboxes
+    rm ${SANDBOX_DIR} -rf
+    kubevirt::bootstrap::regenerate riscv64
 fi

@@ -28,6 +28,8 @@ func NewArchDefaulter(arch string) ArchDefaulter {
 	switch arch {
 	case "arm64":
 		return defaulterARM64{}
+	case "riscv64":
+		return defaulterRISCV64{}
 	case "s390x":
 		return defaulterS390X{}
 	case "amd64":

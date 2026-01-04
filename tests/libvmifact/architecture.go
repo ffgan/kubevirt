@@ -28,3 +28,7 @@ func RegisterArchitecture(arch string) {
 func isARM64() bool {
 	return architecture == "arm64"
 }
+
+func isRISCV64() bool {
+	return architecture == "riscv64"
+}

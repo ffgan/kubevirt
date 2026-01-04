@@ -29,6 +29,8 @@ const (
 	EFIVars              = "OVMF_VARS.fd"
 	EFICodeAARCH64       = "AAVMF_CODE.fd"
 	EFIVarsAARCH64       = "AAVMF_VARS.fd"
+	EFICodeRISCV64       = "RISCV_VIRT_CODE.fd"
+	EFIVarsRISCV64       = "RISCV_VIRT_VARS.fd"
 	EFICodeSecureBoot    = "OVMF_CODE.secboot.fd"
 	EFIVarsSecureBoot    = "OVMF_VARS.secboot.fd"
 	EFICodeSEV           = "OVMF_CODE.cc.fd"
@@ -150,6 +152,15 @@ func DetectEFIEnvironment(arch, ovmfPath string) *EFIEnvironment {
 		return &EFIEnvironment{
 			code: codeArm64,
 			vars: varsArm64,
+		}
+	}
+	if arch == "riscv64" {
+		codeRiscv64 := getEFIBinaryIfExists(ovmfPath, EFICodeRISCV64)
+		varsRiscv64 := getEFIBinaryIfExists(ovmfPath, EFIVarsRISCV64)
+
+		return &EFIEnvironment{
+			code: codeRiscv64,
+			vars: varsRiscv64,
 		}
 	}
 

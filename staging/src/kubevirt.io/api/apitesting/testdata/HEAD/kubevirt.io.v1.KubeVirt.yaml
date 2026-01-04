@@ -69,6 +69,11 @@ spec:
         - emulatedMachinesValue
         machineType: machineTypeValue
         ovmfPath: ovmfPathValue
+      riscv64:
+        emulatedMachines:
+        - emulatedMachinesValue
+        machineType: machineTypeValue
+        ovmfPath: ovmfPathValue
       s390x:
         emulatedMachines:
         - emulatedMachinesValue

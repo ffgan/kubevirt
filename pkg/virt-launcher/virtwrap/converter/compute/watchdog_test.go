@@ -41,6 +41,7 @@ var _ = Describe("Watchdog Domain Configurator", func() {
 	},
 		Entry("amd64", "amd64"),
 		Entry("arm64", "arm64"),
+		Entry("riscv64", "riscv64"),
 		Entry("s390x", "s390x"),
 	)
 
@@ -109,6 +110,11 @@ var _ = Describe("Watchdog Domain Configurator", func() {
 		},
 		Entry("arm64 not supported",
 			"arm64",
+			v1.Watchdog{Name: "unsupportedwatchdog"},
+			"not supported on architecture",
+		),
+		Entry("riscv64 not supported",
+			"riscv64",
 			v1.Watchdog{Name: "unsupportedwatchdog"},
 			"not supported on architecture",
 		),

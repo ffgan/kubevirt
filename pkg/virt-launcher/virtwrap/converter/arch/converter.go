@@ -25,9 +25,10 @@ import (
 )
 
 const (
-	amd64 = "amd64"
-	arm64 = "arm64"
-	s390x = "s390x"
+	amd64   = "amd64"
+	arm64   = "arm64"
+	riscv64 = "riscv64"
+	s390x   = "s390x"
 )
 
 type Converter interface {
@@ -48,6 +49,8 @@ func NewConverter(arch string) Converter {
 	switch arch {
 	case arm64:
 		return converterARM64{}
+	case riscv64:
+		return converterRISCV64{}
 	case s390x:
 		return converterS390X{}
 	case amd64:

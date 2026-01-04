@@ -1457,9 +1457,10 @@ var _ = Describe("[sig-compute]Configurations", decorators.SigCompute, func() {
 
 			config := kv.Spec.Configuration
 			config.MachineType = ""
-			config.ArchitectureConfiguration = &v1.ArchConfiguration{Amd64: &v1.ArchSpecificConfiguration{}, Arm64: &v1.ArchSpecificConfiguration{}, S390x: &v1.ArchSpecificConfiguration{}}
+			config.ArchitectureConfiguration = &v1.ArchConfiguration{Amd64: &v1.ArchSpecificConfiguration{}, Arm64: &v1.ArchSpecificConfiguration{}, Riscv64: &v1.ArchSpecificConfiguration{}, S390x: &v1.ArchSpecificConfiguration{}}
 			config.ArchitectureConfiguration.Amd64.EmulatedMachines = testEmulatedMachines
 			config.ArchitectureConfiguration.Arm64.EmulatedMachines = testEmulatedMachines
+			config.ArchitectureConfiguration.Riscv64.EmulatedMachines = testEmulatedMachines
 			config.ArchitectureConfiguration.S390x.EmulatedMachines = testEmulatedMachines
 
 			kvconfig.UpdateKubeVirtConfigValueAndWait(config)
@@ -1482,12 +1483,14 @@ var _ = Describe("[sig-compute]Configurations", decorators.SigCompute, func() {
 
 			config := kv.Spec.Configuration
 
-			config.ArchitectureConfiguration = &v1.ArchConfiguration{Amd64: &v1.ArchSpecificConfiguration{}, Arm64: &v1.ArchSpecificConfiguration{}, S390x: &v1.ArchSpecificConfiguration{}}
+			config.ArchitectureConfiguration = &v1.ArchConfiguration{Amd64: &v1.ArchSpecificConfiguration{}, Arm64: &v1.ArchSpecificConfiguration{}, Riscv64: &v1.ArchSpecificConfiguration{}, S390x: &v1.ArchSpecificConfiguration{}}
 			config.ArchitectureConfiguration.Amd64.MachineType = "pc"
 			config.ArchitectureConfiguration.Arm64.MachineType = "pc"
+			config.ArchitectureConfiguration.Riscv64.MachineType = "pc"
 			config.ArchitectureConfiguration.S390x.MachineType = "pc"
 			config.ArchitectureConfiguration.Amd64.EmulatedMachines = testEmulatedMachines
 			config.ArchitectureConfiguration.Arm64.EmulatedMachines = testEmulatedMachines
+			config.ArchitectureConfiguration.Riscv64.EmulatedMachines = testEmulatedMachines
 			config.ArchitectureConfiguration.S390x.EmulatedMachines = testEmulatedMachines
 			kvconfig.UpdateKubeVirtConfigValueAndWait(config)
 

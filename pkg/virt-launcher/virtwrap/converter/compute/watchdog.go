@@ -58,6 +58,8 @@ func (w WatchdogDomainConfigurator) Configure(vmi *v1.VirtualMachineInstance, do
 		)
 	case "arm64":
 		return fmt.Errorf("watchdog is not supported on architecture ARM64")
+	case "riscv64":
+		return fmt.Errorf("watchdog is not supported on architecture riscv64")
 	case "s390x":
 		if vmiWatchdog.Diag288 == nil {
 			return fmt.Errorf("watchdog %s can't be mapped, no watchdog type specified", vmiWatchdog.Name)

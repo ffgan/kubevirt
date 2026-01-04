@@ -47,6 +47,10 @@ oci_image(
             "//rpm:sidecar-shim_aarch64",
             ":sidecar-shim-tar",
         ],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": [
+            "//rpm:sidecar-shim_riscv64",
+            ":sidecar-shim-tar",
+        ],
         "//conditions:default": [
             "//rpm:sidecar-shim_x86_64",
             ":sidecar-shim-tar",

@@ -6,6 +6,7 @@ pkg_tar(
     srcs = select({
         "@io_bazel_rules_go//go/platform:linux_arm64": ["@alpine_image_aarch64//file"],
         "@io_bazel_rules_go//go/platform:linux_s390x": ["@alpine_image_s390x//file"],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": ["@alpine_image_riscv64//file"],
         "//conditions:default": ["@alpine_image//file"],
     }),
     extension = "tar.gz",
@@ -19,6 +20,7 @@ oci_image(
     architecture = select({
         "@io_bazel_rules_go//go/platform:linux_arm64": "arm64",
         "@io_bazel_rules_go//go/platform:linux_s390x": "s390x",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "riscv64",
         "//conditions:default": "amd64",
     }),
     os = "linux",

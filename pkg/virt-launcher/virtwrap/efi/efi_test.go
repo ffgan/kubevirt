@@ -75,10 +75,12 @@ var _ = Describe("EFI environment detection", func() {
 		Entry("Only SB available", "x86_64", EFICodeSecureBoot, EFIVarsSecureBoot, EFICodeSecureBoot, "", true, false),
 		Entry("Only NoSB available", "x86_64", "", "", EFICode, EFIVars, false, true),
 		Entry("Arm64 EFI", "arm64", "", "", EFICodeAARCH64, EFIVarsAARCH64, false, true),
+		Entry("Riscv64 EFI", "riscv64", "", "", EFICodeRISCV64, EFIVarsRISCV64, false, true),
 		Entry("SB and NoSB available when OVMF_CODE.fd does not exist", "x86_64", EFICodeSecureBoot, EFIVarsSecureBoot, EFICodeSecureBoot, EFIVars, true, true),
 		Entry("Only NoSB available when OVMF_CODE.fd and OVMF_VARS.secboot.fd do not exist", "x86_64", EFICodeSecureBoot, "", EFICodeSecureBoot, EFIVars, false, true),
 		Entry("EFI booting not available for x86_64", "x86_64", "", "", "", "", false, false),
 		Entry("EFI booting not available for arm64", "arm64", "", "", "", "", false, false),
+		Entry("EFI booting not available for riscv64", "riscv64", "", "", "", "", false, false),
 	)
 
 	It("SEV and SEV-SNP EFI Roms", func() {

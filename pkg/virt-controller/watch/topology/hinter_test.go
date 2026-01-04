@@ -85,6 +85,7 @@ var _ = Describe("Hinter", func() {
 		g.Expect(err).To(g.Not(g.HaveOccurred()))
 	},
 		Entry("arm64", "arm64"),
+		Entry("riscv64", "riscv64"),
 	)
 })
 

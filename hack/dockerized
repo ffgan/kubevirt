@@ -16,6 +16,12 @@ kubevirt_builder_version="2510281240-82d14f4b41"
 default_kubevirt_builder_image="quay.io/kubevirt/builder:${kubevirt_builder_version}"
 kubevirt_cross_compile_image="quay.io/kubevirt/builder-cross:${kubevirt_builder_version}"
 
+# riscv64 native build
+if [[ ! -v KUBEVIRT_BUILDER_IMAGE && "$(uname -m)" == "riscv64" ]]; then
+    # TODO: 更新该镜像
+    KUBEVIRT_BUILDER_IMAGE="registry.risc-vers.cn/wg-cloudcomputing/kubevirt-builder:2511281012-da889be13-riscv64"
+fi
+
 KUBEVIRT_BUILDER_IMAGE=${KUBEVIRT_BUILDER_IMAGE:-"${default_kubevirt_builder_image}"}
 
 # As long as KUBEVIRT_BUILDER_IMAGE is using the default builder, check if cross-compilation is needed and
@@ -29,6 +35,13 @@ if [ "${KUBEVIRT_BUILDER_IMAGE}" == "${default_kubevirt_builder_image}" ] && [ -
             KUBEVIRT_BUILDER_IMAGE="${kubevirt_cross_compile_image}"
         fi
     done
+    if [ "$(uname -m)" == "aarch64" ] && [ "${BUILD_ARCH}" == "riscv64" ]; then
+        # cross build on aarch64 host
+        KUBEVIRT_BUILDER_IMAGE="registry.risc-vers.cn/wg-cloudcomputing/kubevirt-builder-cross:20250510-arm64"
+    elif [ "$(uname -m)" == "x86_64" ] && [ "${BUILD_ARCH}" == "riscv64" ]; then
+        # riscv64 cross build on x86_64 host
+        KUBEVIRT_BUILDER_IMAGE="registry.risc-vers.cn/wg-cloudcomputing/kubevirt-builder-cross:2511241014-6ed258fc8-amd64"
+    fi
 fi
 
 SYNC_OUT=${SYNC_OUT:-true}

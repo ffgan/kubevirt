@@ -26,9 +26,10 @@ import (
 )
 
 const (
-	amd64 = "amd64"
-	arm64 = "arm64"
-	s390x = "s390x"
+	amd64   = "amd64"
+	arm64   = "arm64"
+	riscv64 = "riscv64"
+	s390x   = "s390x"
 )
 
 // Ensure that there is a compile error should the struct not implement the archLabeller interface anymore.

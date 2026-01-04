@@ -41,6 +41,7 @@ var _ = Describe("LaunchSecurity Domain Configurator", func() {
 	},
 		Entry("on amd64", "amd64"),
 		Entry("on arm64", "arm64"),
+		Entry("on riscv64", "riscv64"),
 		Entry("on s390x", "s390x"),
 	)
 

@@ -1,0 +1,82 @@
+/* Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Copyright 2021
+ *
+ */
+package defaults
+
+import (
+	v1 "kubevirt.io/api/core/v1"
+)
+
+var _false_rv bool = false
+
+const (
+	defaultCPUModelRISCV64 = v1.CPUModeHostPassthrough
+)
+
+// setDefaultRISCV64CPUModel set default CPU model to host-passthrough for RISCV
+func setDefaultRISCV64CPUModel(spec *v1.VirtualMachineInstanceSpec) {
+	if spec.Domain.CPU == nil {
+		spec.Domain.CPU = &v1.CPU{}
+	}
+
+	if spec.Domain.CPU.Model == "" {
+		spec.Domain.CPU.Model = defaultCPUModelRISCV64
+	}
+}
+
+// setDefaultRISCV64Bootloader set default bootloader to UEFI boot for RISCV
+func setDefaultRISCV64Bootloader(spec *v1.VirtualMachineInstanceSpec) {
+	if spec.Domain.Firmware == nil || spec.Domain.Firmware.Bootloader == nil {
+		if spec.Domain.Firmware == nil {
+			spec.Domain.Firmware = &v1.Firmware{}
+		}
+		if spec.Domain.Firmware.Bootloader == nil {
+			spec.Domain.Firmware.Bootloader = &v1.Bootloader{}
+		}
+		spec.Domain.Firmware.Bootloader.EFI = &v1.EFI{}
+		spec.Domain.Firmware.Bootloader.EFI.SecureBoot = &_false_rv
+	}
+}
+
+// setDefaultRISCV64DisksBus set default Disks Bus for RISCV, as QEMU-KVM for RISCV might not support SATA
+func setDefaultRISCV64DisksBus(spec *v1.VirtualMachineInstanceSpec) {
+	bus := v1.DiskBusVirtio
+
+	for i := range spec.Domain.Devices.Disks {
+		disk := &spec.Domain.Devices.Disks[i].DiskDevice
+
+		if disk.Disk != nil && disk.Disk.Bus == "" {
+			disk.Disk.Bus = bus
+		}
+		if disk.CDRom != nil && disk.CDRom.Bus == "" {
+			disk.CDRom.Bus = bus
+		}
+		if disk.LUN != nil && disk.LUN.Bus == "" {
+			disk.LUN.Bus = bus
+		}
+	}
+}
+
+// SetRISCV64Defaults is mutating function for mutating-webhook for RISCV
+func SetRISCV64Defaults(spec *v1.VirtualMachineInstanceSpec) {
+	setDefaultRISCV64CPUModel(spec)
+	setDefaultRISCV64Bootloader(spec)
+	setDefaultRISCV64DisksBus(spec)
+}
+
+// IsRISCV64 checks if the architecture is RISCV
+func IsRISCV64(vmiSpec *v1.VirtualMachineInstanceSpec) bool {
+	return vmiSpec.Architecture == "riscv64"
+}

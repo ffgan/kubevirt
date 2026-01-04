@@ -1286,7 +1286,7 @@ var _ = Describe(SIG("VirtualMachineRestore Tests", func() {
 				originalPVCName := dv.Name
 
 				memory := "128Mi"
-				if checks.IsARM64(testsuite.Arch) {
+				if checks.IsARM64(testsuite.Arch) || checks.IsRISCV64(testsuite.Arch) {
 					memory = "256Mi"
 				}
 				vmi = libstorage.RenderVMIWithPVC(originalPVCName, testsuite.GetTestNamespace(nil),

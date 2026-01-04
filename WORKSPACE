@@ -21,14 +21,12 @@ http_archive(
     ],
 )
 
+# TODO: upgrade to gain rv64 support
 http_archive(
     name = "rules_oci",
-    sha256 = "acbf8f40e062f707f8754e914dcb0013803c6e5e3679d3e05b571a9f5c7e0b43",
-    strip_prefix = "rules_oci-2.0.1",
-    urls = [
-        "https://github.com/bazel-contrib/rules_oci/releases/download/v2.0.1/rules_oci-v2.0.1.tar.gz",
-        "https://storage.googleapis.com/builddeps/acbf8f40e062f707f8754e914dcb0013803c6e5e3679d3e05b571a9f5c7e0b43",
-    ],
+    sha256 = "f1b7cf2440e77c68f47b195502a45acead649644a5b2942b52e887a8dd8bfa2c",
+    strip_prefix = "rules_oci-2.2.6.1",
+    url = "https://github.com/ffgan/rules_oci/releases/download/v2.2.6.1/rules_oci-v2.2.6.1.tar.gz",
 )
 
 load("@rules_oci//oci:dependencies.bzl", "rules_oci_dependencies")
@@ -72,10 +70,10 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "130739704540caa14e77c54810b9f01d6d9ae897d53eedceb40fd6b75efc3c23",
+    sha256 = "68af54cb97fbdee5e5e8fe8d210d15a518f9d62abfd71620c3eaff3b26a5ff86",
     urls = [
-        "https://github.com/bazel-contrib/rules_go/releases/download/v0.54.1/rules_go-v0.54.1.zip",
-        "https://storage.googleapis.com/builddeps/130739704540caa14e77c54810b9f01d6d9ae897d53eedceb40fd6b75efc3c23",
+        "https://mirror.bazel.build/github.com/bazel-contrib/rules_go/releases/download/v0.59.0/rules_go-v0.59.0.zip",
+        "https://github.com/bazel-contrib/rules_go/releases/download/v0.59.0/rules_go-v0.59.0.zip",
     ],
 )
 
@@ -87,6 +85,7 @@ buildifier_prebuilt_register_toolchains(
             "amd64",
             "arm64",
             "s390x",
+            "riscv64",
         ],
         names = [
             "buildifier",
@@ -98,30 +97,35 @@ buildifier_prebuilt_register_toolchains(
             "windows",
         ],
         sha256_values = {
-            "buildifier_darwin_amd64": "375f823103d01620aaec20a0c29c6cbca99f4fd0725ae30b93655c6704f44d71",
-            "buildifier_darwin_arm64": "5a6afc6ac7a09f5455ba0b89bd99d5ae23b4174dc5dc9d6c0ed5ce8caac3f813",
-            "buildifier_linux_amd64": "5474cc5128a74e806783d54081f581662c4be8ae65022f557e9281ed5dc88009",
-            "buildifier_linux_arm64": "0bf86c4bfffaf4f08eed77bde5b2082e4ae5039a11e2e8b03984c173c34a561c",
-            "buildifier_linux_s390x": "e2d79ff5885d45274f76531f1adbc7b73a129f59e767f777e8fbde633d9d4e2e",
-            "buildifier_windows_amd64": "370cd576075ad29930a82f5de132f1a1de4084c784a82514bd4da80c85acf4a8",
-            "buildozer_darwin_amd64": "854c9583efc166602276802658cef3f224d60898cfaa60630b33d328db3b0de2",
-            "buildozer_darwin_arm64": "31b1bfe20d7d5444be217af78f94c5c43799cdf847c6ce69794b7bf3319c5364",
-            "buildozer_linux_amd64": "3305e287b3fcc68b9a35fd8515ee617452cd4e018f9e6886b6c7cdbcba8710d4",
-            "buildozer_linux_arm64": "0b5a2a717ac4fc911e1fec8d92af71dbb4fe95b10e5213da0cc3d56cea64a328",
-            "buildozer_linux_s390x": "7e28da8722656e800424989f5cdbc095cb29b2d398d33e6b3d04e0f50bc0bb10",
-            "buildozer_windows_amd64": "58d41ce53257c5594c9bc86d769f580909269f68de114297f46284fbb9023dcf",
+            "buildifier_darwin_amd64": "9f8cffceb82f4e6722a32a021cbc9a5344b386b77b9f79ee095c61d087aaea06",
+            "buildifier_darwin_arm64": "cfab310ae22379e69a3b1810b433c4cd2fc2c8f4a324586dfe4cc199943b8d5a",
+            "buildifier_linux_amd64": "6ceb7b0ab7cf66fceccc56a027d21d9cc557a7f34af37d2101edb56b92fcfa1a",
+            "buildifier_linux_arm64": "3baa1cf7eb41d51f462fdd1fff3a6a4d81d757275d05b2dd5f48671284e9a1a5",
+            "buildifier_linux_s390x": "89cb42099db8c6ce1db2faf63305fcf14f45fd9537e512134ae8b55ddeb909d9",
+            "buildifier_linux_riscv64": "5101795c6b90e3aca6d8dc4efe15fd818a8b6053f34284551f6ba7fa57ad8415",
+            "buildifier_windows_amd64": "802104da0bcda0424a397ac5be0004c372665a70289a6d5146e652ee497c0dc6",
+            "buildozer_darwin_amd64": "1284b7416d9ebbb50033645fc648985f9b2e0f38e7f22f79c0398c97d38d146c",
+            "buildozer_darwin_arm64": "a981182561f67ed697b0e810714307c8475bce68c069f819212fe36f12d77872",
+            "buildozer_linux_amd64": "04454a6a89c64c603027cc3371eb1c36e48727e04558e077c20ec37c9c2f831a",
+            "buildozer_linux_arm64": "e55b56861a390cc993402d2974d5b74a097694f64eb08599dc704bdd7dde6484",
+            "buildozer_linux_s390x": "3dbfd9501e103bdc016f86291805ceaa7e7b6e9dd4c0b0d8746913449c30c30e",
+            "buildozer_linux_riscv64": "4efc096f6b23e81db035344706c12daf6795fdff0a1edb7af8d96bc60ea631dc",
+            "buildozer_windows_amd64": "6e3b8520904394adc31a610544fc2f86609c0433e39ae3a5b5f992e20dabb0d3",
+            # invalid hash,in order to pass check
+            "buildifier_darwin_s390x": "5101795c6b90e3aca6d8dc4efe15fd818a8b6053f34284551f6ba7fa57ad8415",
+            "buildozer_darwin_s390x": "5101795c6b90e3aca6d8dc4efe15fd818a8b6053f34284551f6ba7fa57ad8415",
+            "buildifier_windows_s390x": "5101795c6b90e3aca6d8dc4efe15fd818a8b6053f34284551f6ba7fa57ad8415",
+            "buildozer_windows_s390x": "5101795c6b90e3aca6d8dc4efe15fd818a8b6053f34284551f6ba7fa57ad8415",
         },
-        version = "v7.3.1",
+        version = "v8.2.1",
     ),
 )
 
 http_archive(
     name = "bazel_gazelle",
-    sha256 = "b760f7fe75173886007f7c2e616a21241208f3d90e8657dc65d36a771e916b6a",
+    sha256 = "675114d8b433d0a9f54d81171833be96ebc4113115664b791e6f204d58e93446",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.39.1/bazel-gazelle-v0.39.1.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.39.1/bazel-gazelle-v0.39.1.tar.gz",
-        "https://storage.googleapis.com/builddeps/b760f7fe75173886007f7c2e616a21241208f3d90e8657dc65d36a771e916b6a",
+        "https://github.com/bazel-contrib/bazel-gazelle/releases/download/v0.47.0/bazel-gazelle-v0.47.0.tar.gz",
     ],
 )
 
@@ -141,11 +145,9 @@ rules_pkg_dependencies()
 
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "95d39fd84ff4474babaf190450ee034d958202043e366b9fc38f438c9e6c3334",
-    strip_prefix = "rules_docker-0.16.0",
+    sha256 = "f5d26fcba1a99597a275e9a18971a4dcf44aecb109ccf8f080d080f1e6d9a10b",
     urls = [
-        "https://github.com/bazelbuild/rules_docker/releases/download/v0.16.0/rules_docker-v0.16.0.tar.gz",
-        "https://storage.googleapis.com/builddeps/95d39fd84ff4474babaf190450ee034d958202043e366b9fc38f438c9e6c3334",
+        "https://code.openruyi.cn/-/project/10973/uploads/1d6f0be26f42eddeb39fe8fcc5ac9e91/rules_docker-v0.16.0-riscv-custom.zip",
     ],
 )
 
@@ -188,6 +190,14 @@ http_file(
 )
 
 http_file(
+    name = "alpine_image_riscv64",
+    sha256 = "a77750edbe8cdd4b7505b9e535fc7be610d0375bf68bf0974ace8636c6d1d404",
+    urls = [
+        "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/riscv64/alpine-standard-3.23.0-riscv64.iso",
+    ],
+)
+
+http_file(
     name = "cirros_image",
     sha256 = "932fcae93574e242dc3d772d5235061747dfe537668443a1f0567d893614b464",
     urls = [
@@ -214,6 +224,7 @@ http_file(
     ],
 )
 
+# TODO: wait for bazeldnf release new version,to gain rv64 support
 http_archive(
     name = "bazeldnf",
     sha256 = "0a4b9740da1839ded674c8f5012c069b235b101f1eaa2552a4721287808541af",
@@ -358,6 +369,12 @@ oci_pull(
     image = "gcr.io/distroless/base-debian12",
 )
 
+oci_pull(
+    name = "go_image_base_riscv64",
+    digest = "sha256:95c1947e98bce1a0f4815ef1bf2f29760502d82d2f3fb841d23970fd0f6f80af",
+    image = "registry.risc-vers.cn/wg-cloudcomputing/debian",
+)
+
 # Pull fedora container-disk preconfigured with ci tooling
 # like stress and qemu guest agent pre-configured
 # TODO build fedora_with_test_tooling for multi-arch
@@ -384,6 +401,8 @@ oci_pull(
     digest = "sha256:3d9f468750d90845a81608ea13c85237ea295c6295c911a99dc5e0504c8bc05b",
     image = "quay.io/kubevirtci/fedora-with-test-tooling",
 )
+
+# TODO: add rv64 support for fedora_with_test_tooling
 
 oci_pull(
     name = "alpine-ext-kernel-boot-demo-container-base",
@@ -429,6 +448,8 @@ http_archive(
         "https://storage.googleapis.com/kubevirt-prow/devel/release/kubevirt/libguestfs-appliance/libguestfs-appliance-1.54.0-qcow2-linux-5.14.0-575-centos9-s390x.tar.xz",
     ],
 )
+
+# TODO: add rv64 support for libguestfs-appliance
 
 # Get container-disk-v1alpha RPM's
 http_file(
@@ -8099,4 +8120,2104 @@ rpm(
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/zstd-1.5.5-1.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/6635550f3a87a734a069b3598e33a16174d14dca3ca52b9ef4bff78ea6f91c16",
     ],
+)
+
+rpm(
+    name = "acl-0__2.3.1-2.oe2403.riscv64",
+    sha256 = "e523749c5a80d6643d1996e80aca0e13ef6123a8e176b856d4ae4b776ec5bfc5",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/acl-2.3.1-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "attr-0__2.5.1-4.oe2403.riscv64",
+    sha256 = "2123a9d7ced4313470927412812d6a93a2403b2cd7d109794a093d231ef795fc",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/attr-2.5.1-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "audit-libs-1__3.1.2-2.oe2403.riscv64",
+    sha256 = "94f7c4aa96ffcd994dded2afe0332d3e18c4fe10cc95ea5ed0a9db2b4fb71f37",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/audit-libs-3.1.2-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "basesystem-0__12-3.oe2403.noarch",
+    sha256 = "9c461ba1d13fde45ab526a85a7f44e28534c9c9d081fbd476e01c078c3523628",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/basesystem-12-3.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "bash-0__5.2.15-9.oe2403.riscv64",
+    sha256 = "6e98db4ff17af4e92fb01289c320054d2f2ca03174651893a0941fcd92371148",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/bash-5.2.15-9.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "bc-0__1.07.1-12.oe2403.riscv64",
+    sha256 = "a35f23ebf7b25d167d9bd8c0fa49cd91203b296505b4fcec9a33b9e9c4ae38ec",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/bc-1.07.1-12.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "brotli-0__1.1.0-1.oe2403.riscv64",
+    sha256 = "4d9f0e1f61027ade77df0e8ae7f903532aebc7e523bdf7ce853a07811ec3ca93",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/brotli-1.1.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "bzip2-0__1.0.8-7.oe2403.riscv64",
+    sha256 = "e92521af80c8acfcb538ddd16e8f19af8393cf8cef611d292dc78ef7279aff09",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/bzip2-1.0.8-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "ca-certificates-0__2023.2.64-1.oe2403.noarch",
+    sha256 = "4380a96bd9819215c3cc00f1709b24f8179761882b4351fe932f23fdc2dc8fa1",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/ca-certificates-2023.2.64-1.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "chkconfig-0__1.25-1.oe2403.riscv64",
+    sha256 = "f7a9c4b11a66b15c932e8997e91ebac3c218fb11cdcb6cfd542b5ea8b03e487f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/chkconfig-1.25-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "coreutils-0__9.4-4.oe2403.riscv64",
+    sha256 = "085c4284d4c09992f60aad79b2bef05565385586822517ef69423ff1e4d1e777",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/coreutils-9.4-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "cracklib-0__2.9.11-1.oe2403.riscv64",
+    sha256 = "19200ca5f5b145f4e581af9f9fbe4e029a48a1c969386b55fcfc57bae4690029",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/cracklib-2.9.11-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "crypto-policies-0__20230614-2.git5f3458e.oe2403.noarch",
+    sha256 = "e69a76ddf5b492b3000cb7c2fdfb955d9595a0284d39d632867a8552185f0512",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/crypto-policies-20230614-2.git5f3458e.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "cryptsetup-0__2.6.1-1.oe2403.riscv64",
+    sha256 = "210119f0aa8bf77c012f32fc86d8bcf45e00087812b38e9fa77068cd389106fe",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/cryptsetup-2.6.1-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "curl-0__8.4.0-3.oe2403.riscv64",
+    sha256 = "6d16b7c97b193772f326769c03820f062a4e8e0683fe0f7dfb551c52524b2319",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/curl-8.4.0-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "cyrus-sasl-lib-0__2.1.28-2.oe2403.riscv64",
+    sha256 = "930e7cc2ee40b94d46f788c7c75c75d94dd34cb26735165205b6f1723d1f6136",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/cyrus-sasl-lib-2.1.28-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "dbus-libs-1__1.14.8-2.oe2403.riscv64",
+    sha256 = "6c0f4c2da5762fc2b5491e885fff25546ee43454553cab6acf14b224a210388d",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/dbus-libs-1.14.8-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "device-mapper-8__1.02.195-8.oe2403.riscv64",
+    sha256 = "3114c8549062653c861a59a523beaf17c94569cf35b818401cb10144db835690",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/device-mapper-1.02.195-8.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "e2fsprogs-0__1.47.0-3.oe2403.riscv64",
+    sha256 = "0766a1b475f2f2857c991e5ff5617a5cbaa117b71b1d7f93cb91bd40f08f42cf",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/e2fsprogs-1.47.0-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "expat-0__2.5.0-2.oe2403.riscv64",
+    sha256 = "15f3d47c20c77c8b94678fcfffbe17930f5061d43b71651b8bbaf9496c02262a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/expat-2.5.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "filesystem-0__3.16-5.oe2403.riscv64",
+    sha256 = "8d791752710eb4377874d6911119fa61cb238b8e547c2b27b6fe8fd6a641871c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/filesystem-3.16-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "fuse-0__2.9.9-11.oe2403.riscv64",
+    sha256 = "5d9dbf662fda4fb2957da414ba9e9123583fe7b1bfec406e8eea3e6654ef5e72",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/fuse-2.9.9-11.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "fuse-common-0__3.16.2-1.oe2403.riscv64",
+    sha256 = "88465b7773fa57690767b912a10471a412dae8c240e338e76692080c54119477",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/fuse-common-3.16.2-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gawk-0__5.2.2-1.oe2403.riscv64",
+    sha256 = "b2620f3669bfab1a149ef371bbc3643368ed7a612c99d030db910acda8fdfabf",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gawk-5.2.2-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gdbm-1__1.23-2.oe2403.riscv64",
+    sha256 = "6b86c51c7ef76950edbc8fd5b2b11ab6cc635e1d1cb60f15ce53fadcb2e03143",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gdbm-1.23-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "glib2-0__2.78.3-1.oe2403.riscv64",
+    sha256 = "630e45c967c45e2754d463430d3689c3f93ba590e69ca9a063eca56916816d18",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/glib2-2.78.3-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "glibc-0__2.38-29.oe2403.riscv64",
+    sha256 = "2f1d4701e2d538b74a3f72c53d85b6d8ce9f18b6bf6a81f16fdac249c195fd78",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/glibc-2.38-29.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "glibc2-0__2.38-29.oe2403.riscv64",
+    sha256 = "2a9bc1c425ad03f5b3dc24a1560e42057dc22591719d75c48124225792098736",
+    urls = [
+        "https://code.openruyi.cn/-/project/10977/uploads/6e3a4b9285726512eec4c13bd30f80ab/glibc-2.38-29.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "glibc-all-langpacks-0__2.38-29.oe2403.riscv64",
+    sha256 = "e0399107fecd07f68fdcc1acdf898e4004d3d42903773790b2e15c06a0bac3e2",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/glibc-all-langpacks-2.38-29.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "glibc-common-0__2.38-29.oe2403.riscv64",
+    sha256 = "10afdc0adabc622a86947eaf77d37bfabc99d52087c48eac229094662f4b1f46",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/glibc-common-2.38-29.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gmp-1__6.3.0-2.oe2403.riscv64",
+    sha256 = "41e007bc9a213cec0b418734ec005b2d72e4926c5acb05dc74a7c6169382f811",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gmp-6.3.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gnutls-0__3.8.2-4.oe2403.riscv64",
+    sha256 = "209250a712e63c2bc0f773eef28268c097e211c64a8d284cc18d07cf02008ad0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gnutls-3.8.2-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gobject-introspection-0__1.76.1-1.oe2403.riscv64",
+    sha256 = "e9a0216b41c268b2fc3f9cebf0dc0e999da54de0d2f02bfac8ca2119bdaf08d7",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gobject-introspection-1.76.1-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "grep-0__3.11-1.oe2403.riscv64",
+    sha256 = "b1f06b6db4844d02f2f3bd6bba58d26ede6a44c4a5c0e22bd088eef1de539a35",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/grep-3.11-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gzip-0__1.12-4.oe2403.riscv64",
+    sha256 = "af12322f06580399d3468adc0679ee33641b3996de496cfe3dcaf2c9ea579864",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gzip-1.12-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "info-0__7.0.3-3.oe2403.riscv64",
+    sha256 = "485f1124edfb4586a203c39ee0e7bc8806f8b60fa47dc41ff3b53b2b0c4bfe25",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/info-7.0.3-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "iputils-0__20221126-5.oe2403.riscv64",
+    sha256 = "1dcc406053fd5359f8a3ebabccffdaa1a8fdc5f41e24053ec6a15729f6fe5ebf",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/iputils-20221126-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "json-c-0__0.17-2.oe2403.riscv64",
+    sha256 = "05f979c4a65bd235b83a4abef9040554673311c72d60f3120626bcf8f0226361",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/json-c-0.17-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "keyutils-libs-0__1.6.3-5.oe2403.riscv64",
+    sha256 = "233c3378aa8408d84566a00e89a82921ccc643dc6b3e8b5d75ff723031697909",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/keyutils-libs-1.6.3-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "kmod-libs-0__30-4.oe2403.riscv64",
+    sha256 = "9bd77ef35c186783637531fb689c9723a38764fe2b0ac6348cddbec3cf252a2d",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/kmod-libs-30-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "krb5-libs-0__1.21.2-2.oe2403.riscv64",
+    sha256 = "16c9fa3d1768f2ee0bca197fa29500f894a55951a459aaef36ae8d5600cf211f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/krb5-libs-1.21.2-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libacl-0__2.3.1-2.oe2403.riscv64",
+    sha256 = "06073e96b419061a3b89efd4af2e5b7f027f125e17656540e71fdad27a466022",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libacl-2.3.1-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libaio-0__0.3.113-9.oe2403.riscv64",
+    sha256 = "2b75f9afbf30dff370ef731c6398188e7c905d3df42e4f37c344176f282df847",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libaio-0.3.113-9.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libargon2-0__20190702-3.oe2403.riscv64",
+    sha256 = "d04584c98829e24bafb1ef86464d3870faa29403da34f4ccb652bd712887417c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libargon2-20190702-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libblkid-0__2.39.1-7.oe2403.riscv64",
+    sha256 = "e98f3661f292bffb97025964ba69c79eac089ad3a730448f87a907defc512303",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libblkid-2.39.1-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libcap-0__2.69-3.oe2403.riscv64",
+    sha256 = "62821ae0c159c87073854bdbe1f40fee116787ad1c110a42e1d360c05b67c795",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libcap-2.69-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libcap-ng-0__0.8.3-2.oe2403.riscv64",
+    sha256 = "701d032cce57b739dfeb0b9470637936df563caa9ef9c51f52afe2e92da389cb",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libcap-ng-0.8.3-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libcurl-0__8.4.0-3.oe2403.riscv64",
+    sha256 = "f9231aae1a24a4c0eec2e1ae0601bdf48262731854f6adb0c7abe2c258bd2374",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libcurl-8.4.0-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libev-0__4.33-4.oe2403.riscv64",
+    sha256 = "943f5a3c51a8c886c087202d6562a709adffb0a1a57ae7db09b067a8099073de",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libev-4.33-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libevent-0__2.1.12-11.oe2403.riscv64",
+    sha256 = "122ab5081a42bcac1689a19e29cc1763239a332b83713f324f438d5e965bc831",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libevent-2.1.12-11.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libfdisk-0__2.39.1-7.oe2403.riscv64",
+    sha256 = "2115374b7c2b24c6121d9ce8af4a0c33c1abeafc04bea5002e17812036ce3b64",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libfdisk-2.39.1-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libffi-0__3.4.4-3.oe2403.riscv64",
+    sha256 = "52171032945590b9ba0d157996ba13cd7bcd48b8d458bfb6f6d9b93a20daabda",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libffi-3.4.4-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libgcc-0__12.3.1-30.oe2403.riscv64",
+    sha256 = "1f3bf83186ccb4fc2daaf571136dfe1c8d864d9e34a1c1cd012bf63cc4bc37c0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libgcc-12.3.1-30.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libgcrypt-0__1.10.2-1.oe2403.riscv64",
+    sha256 = "6c3da304ce645aa92fea37dede4b36cbb283195e7ebb848b6f655adb01cdb7b8",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libgcrypt-1.10.2-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libgpg-error-0__1.47-1.oe2403.riscv64",
+    sha256 = "a58d35d72a742f7335d06cc94488e9854babc2fcfdf2d87b9d18f8537cfb38b4",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libgpg-error-1.47-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libidn2-0__2.3.4-1.oe2403.riscv64",
+    sha256 = "c0d752acd5cb8d01ab80a1978b20a69bb2fec642b468151e435839b7a7b1cef0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libidn2-2.3.4-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libmount-0__2.39.1-7.oe2403.riscv64",
+    sha256 = "c20c9790efe27c66377fbab4a5cbf81e10a019fb1516ee0d30f777fdf4c809cc",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libmount-2.39.1-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libnghttp2-0__1.58.0-2.oe2403.riscv64",
+    sha256 = "6ba6565c15b7c65306ea286a20c74898b395f57f7dd4baf0a3a01578bb761f14",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libnghttp2-1.58.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libnsl2-0__2.0.1-1.oe2403.riscv64",
+    sha256 = "d2485f03f7c5d3236fc94eb5c1d5c2eac943cb3af4c64d7ec1ef1915347c82dc",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libnsl2-2.0.1-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libpcap-14__1.10.4-1.oe2403.riscv64",
+    sha256 = "4823663d4d5b824153fd6f8e0b3bb59505a5b4f3de81661923af8cdd7e476e44",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libpcap-1.10.4-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libpng-2__1.6.40-1.oe2403.riscv64",
+    sha256 = "930b193e61dd42b2545d98d5e99c68e9a1a30efc091844be3a752a1aa475c4cd",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libpng-1.6.40-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libpsl-0__0.21.2-1.oe2403.riscv64",
+    sha256 = "d428a182c5f13a5d05a2813be0361924d7bdc8edf73af0f078d657c62cb09c8e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libpsl-0.21.2-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libpwquality-0__1.4.5-1.oe2403.riscv64",
+    sha256 = "b98cdf0262ba33891d0bd9a602ad039c7a505fef10f19dda46e988b55fd4a308",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libpwquality-1.4.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libseccomp-0__2.5.4-2.oe2403.riscv64",
+    sha256 = "4a1baa5215b62d0f37ff1e586cf1a5e9e62d321ad9304dee05a415d2c8a642d5",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libseccomp-2.5.4-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libselinux-0__3.5-3.oe2403.riscv64",
+    sha256 = "f295c8a0f04d6fdcef5d223b4d0f5a0e6290e9263ff710df3fa09540777c2af3",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libselinux-3.5-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libsemanage-0__3.5-1.oe2403.riscv64",
+    sha256 = "bfca6c563cfe0cd988f6404ff114c4c5c1dd62e28d01bb9d9b7d61983c6a09ed",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libsemanage-3.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libsepol-0__3.5-3.oe2403.riscv64",
+    sha256 = "d80415c232b14fe69df7e2efa6def7a70ec4a1b3d3c5444dc8c550eb72dabbc6",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libsepol-3.5-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libsigsegv-0__2.14-1.oe2403.riscv64",
+    sha256 = "783de6513e099ef4b5e34e89da89ead3c0b618e16326a6d553246f68c6536504",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libsigsegv-2.14-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libsmartcols-0__2.39.1-7.oe2403.riscv64",
+    sha256 = "fce909135f90e90923c9bf55b43fae8dd592039460c6cfb2f028b69d2ce4d6b7",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libsmartcols-2.39.1-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libssh-0__0.10.5-2.oe2403.riscv64",
+    sha256 = "23705e11bbaa34aa7b29b86ac6695dcc988bce87dadb5c6517686b334b211186",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libssh-0.10.5-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libssh2-0__1.11.0-2.oe2403.riscv64",
+    sha256 = "816090c0ce64cf485c26b7a7b358060a90f82a4eb0090a32d945bd77c23e4d64",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libssh2-1.11.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libstdcpp-0__12.3.1-30.oe2403.riscv64",
+    sha256 = "bb64dcb852f16ea6dc294a689d56e0ed92910e8a5785e4d6e8cb676f723d01ea",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libstdc++-12.3.1-30.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libtasn1-0__4.19.0-1.oe2403.riscv64",
+    sha256 = "556f9d46aba77c8b2d6bf8767d7696dbad16db9f881f136bd889ee45640c4a8b",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libtasn1-4.19.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libtirpc-0__1.3.4-2.oe2403.riscv64",
+    sha256 = "ade1d2c44893cca1163013a6f5cd15cf7b0817c5ca0bf0a824af925bda7e0ed5",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libtirpc-1.3.4-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libunistring-0__1.1-2.oe2403.riscv64",
+    sha256 = "ff44e95b35506737930399858d38b843dc7a42e7463128e7a95115be569ced16",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libunistring-1.1-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "liburing-0__2.3-1.oe2403.riscv64",
+    sha256 = "ec078569af26404f9051b47c101ef89146c027a36306f0b9893cbdeeb39b378f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/liburing-2.3-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libutempter-0__1.2.1-3.oe2403.riscv64",
+    sha256 = "cfdc1052058036b2a106b7b0531c9a25d153b02e9b7d03d85bf2bd48b01a4ec1",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libutempter-1.2.1-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libuuid-0__2.39.1-7.oe2403.riscv64",
+    sha256 = "9106856cd19048b2b9427f9339fd741d8b8d10c92fa49e59e30ba57c4a2349cf",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libuuid-2.39.1-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libverto-0__0.3.2-3.oe2403.riscv64",
+    sha256 = "76e702c0abde4c32fa3de992d34af9f9e9d929f9809013fa0b926f7da054f375",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libverto-0.3.2-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libxcrypt-0__4.4.36-2.oe2403.riscv64",
+    sha256 = "2657c16cef33fb09e7d53f096f4c145b7688ed487c4c8704fc427818fd9144a0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libxcrypt-4.4.36-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "lz4-0__1.9.4-2.oe2403.riscv64",
+    sha256 = "437615bcc9aa208714ea8d6919e130e50e031987c3cab857e903d208e8568346",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/lz4-1.9.4-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "mpfr-0__4.2.1-1.oe2403.riscv64",
+    sha256 = "9385439dd6970937f71db341730e2c71c4545c940e531e06da319241fd0e773c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/mpfr-4.2.1-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "ncurses-0__6.4-8.oe2403.riscv64",
+    sha256 = "78357618788ffa90d7166f74087603d036ee564399e53da9f04ceaa2e8cf20eb",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/ncurses-6.4-8.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "ncurses-base-0__6.4-8.oe2403.noarch",
+    sha256 = "bc65df6d941d6376936cec08471878291f22255c9e4b047c0f52fa6656be4be6",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/ncurses-base-6.4-8.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "ncurses-libs-0__6.4-8.oe2403.riscv64",
+    sha256 = "0734e22570d7f4a3557fffc845deed20488a422d74beacef1661221a97817729",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/ncurses-libs-6.4-8.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "nettle-0__3.8.1-1.oe2403.riscv64",
+    sha256 = "5458fd9d85b50c1ae6e2608266fd68d1fcf49374437885311e1d39410a7da472",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/nettle-3.8.1-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "newt-0__0.52.23-1.oe2403.riscv64",
+    sha256 = "1798256bf28148ef7d7f372e9c69e2732a33a6eace40882922c54ee0d1a65a4f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/newt-0.52.23-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "nmap-2__7.94-5.oe2403.riscv64",
+    sha256 = "161eb51afdb2735160db49eae0cbff8a967923583d0c9e99b9ae26bde0b71816",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/nmap-7.94-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "numactl-libs-0__2.0.16-10.oe2403.riscv64",
+    sha256 = "df4f2616f632acf22db550871614a4ba4e9ce3b0f3f93e42c0be5f5f6786cc89",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/numactl-libs-2.0.16-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "openEuler-gpg-keys-0__1.0-3.7.oe2403.riscv64",
+    sha256 = "0a31e40452dada7f5c4482508ba074b25728ef5156e091d3f6ef754e24ae54df",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/openEuler-gpg-keys-1.0-3.7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "openEuler-release-0__24.03LTS-55.oe2403.riscv64",
+    sha256 = "fc6183eb02b47944ca51019d85caf44ec94e94d0c97d98e514174b0420a1605e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/openEuler-release-24.03LTS-55.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "openEuler-repos-0__1.0-3.7.oe2403.riscv64",
+    sha256 = "e893a7f054c1a986e06cccd8a1af7dbce6032490a8b6a020a2e466898aad4173",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/openEuler-repos-1.0-3.7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "openldap-0__2.6.5-4.oe2403.riscv64",
+    sha256 = "82d7953965bf16d7a8ac5f26abf635a6899799fae573e17fcb6f6a61bbc66ab9",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/openldap-2.6.5-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "openssl-libs-1__3.0.12-5.oe2403.riscv64",
+    sha256 = "1038f4aafae25d92249221df309df63de1aaee8f0fcecaa4fa6fb6d3f8c1981c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/openssl-libs-3.0.12-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "p11-kit-0__0.25.0-2.oe2403.riscv64",
+    sha256 = "6ee486271a55065863c2c2d0225c7849e2a2747fde22326cf7ffd52ac1acd361",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/p11-kit-0.25.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "p11-kit-trust-0__0.25.0-2.oe2403.riscv64",
+    sha256 = "69fde5ff8bb0bb1da86b7b05ff4c5031f34902f7056210b0b5c3bc38e93a7260",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/p11-kit-trust-0.25.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "pam-0__1.5.3-4.oe2403.riscv64",
+    sha256 = "327c22c872cb57cda04a7c2ed1c39072f64ac8e9e41057620bd5c5e0141cbd64",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/pam-1.5.3-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "passt-2024_08_06.ee36266-2.riscv64",
+    sha256 = "f3097d9256508943c03cf2927ff11a792cf3c9bcf0c7e183182b863856b6cf5b",
+    urls = [
+        "https://code.openruyi.cn/-/project/10199/uploads/c3eab02332f40fd5602579495c697a07/passt-0_20250512.g8ec1341-3.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "pcre2-0__10.42-7.oe2403.riscv64",
+    sha256 = "6065389e8d8883982e6f7c882f6786890f82632602b4fd87c1f4d9aec19b4d85",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/pcre2-10.42-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "popt-0__1.19-2.oe2403.riscv64",
+    sha256 = "285943fa65b7fa8b5b16e96d5321ccb41e3f0add5e240af6d08b7a3424b66547",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/popt-1.19-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "procps-ng-0__4.0.4-5.oe2403.riscv64",
+    sha256 = "c76f79c652f3b434997329f7a2c634eba9777d069cd696cb27fbbbbdbff9333e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/procps-ng-4.0.4-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "publicsuffix-list-0__20240108-1.oe2403.noarch",
+    sha256 = "dfdec4bb8e5f17cf56f9acbd01ba473a793363b0628448c1c36f666b1ae5b243",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/publicsuffix-list-20240108-1.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python-pip-wheel-0__23.3.1-1.oe2403.noarch",
+    sha256 = "93f9b7a7cd4e2cc3e4316b8de7bcfba0f10c33909fdb9bae67b53e5e9063f06a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python-pip-wheel-23.3.1-1.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python-setuptools-0__68.0.0-1.oe2403.noarch",
+    sha256 = "017a9adea60d0b03d03e5a16fafc303688e925c5b097790909952102cecde843",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python-setuptools-68.0.0-1.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-0__3.11.6-2.oe2403.riscv64",
+    sha256 = "4954b68c10b428faacfd63ccef9197872ddddcb977a39d702a57ed5e702ff930",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-3.11.6-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-configshell-0__1.1.30-1.oe2403.noarch",
+    sha256 = "6bb3418cc25d5681552674fd8d9dd50217a1c09be5fbd02a9887fc19cb4e8910",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-configshell-1.1.30-1.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-dbus-0__1.3.2-1.oe2403.riscv64",
+    sha256 = "5a889414225e2ee849f292041c3ac75fcce7c9d37e67fe3ec23515d3cc23651d",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-dbus-1.3.2-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-gobject-base-0__3.46.0-2.oe2403.riscv64",
+    sha256 = "3947ce3d05d5577302f58b9ddbea56fab105faac7f26515e61c3b8074603524a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-gobject-base-3.46.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-kmod-0__30-4.oe2403.riscv64",
+    sha256 = "ba8f7a6d77ddbba6809cb9bb23ee47575b394b11c6038c5609ec7e3364952ca6",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-kmod-30-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-pyparsing-0__3.1.1-1.oe2403.noarch",
+    sha256 = "afbe07c6dda177c5ea067bdea5b5590d7f671d11529500eaba2fad9e2ccad364",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-pyparsing-3.1.1-1.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-pyudev-0__0.24.1-2.oe2403.noarch",
+    sha256 = "de05a3e3232ac74f1d7940ed0adf62ee156dd55cb4b4cf622cecedb0f70bac2e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-pyudev-0.24.1-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-rtslib-0__2.1.76-2.oe2403.noarch",
+    sha256 = "3a4d3f05791b5b963c392aa526fb0d1333dc4e3464ebe4495ee647fdb33211ce",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-rtslib-2.1.76-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-six-0__1.16.0-3.oe2403.noarch",
+    sha256 = "4737da26b6c955fccf0a11e0cf87efc1c47b0a7be5eb861e2f0d31cc1a42b8bd",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-six-1.16.0-3.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-urwid-0__2.1.2-5.oe2403.riscv64",
+    sha256 = "12493a03c2495a92cabe03de240140b09dee632424ab2e21dcb0753e6446c38d",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-urwid-2.1.2-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "qemu-img-11__8.2.0-13.oe2403.riscv64",
+    sha256 = "54f44ae481a95d485569ed548810601d6e0b8f18c14bfb87c76e7df1b66cbe61",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/qemu-img-8.2.0-13.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "readline-0__8.2-2.oe2403.riscv64",
+    sha256 = "bb0e6550ccb405f71fd08136c721c5c39925cd2f329aee11b712ecda8823d61e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/readline-8.2-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "sed-0__4.9-4.oe2403.riscv64",
+    sha256 = "c59238207b1bbe128a3f6c94ae2b692e9c7cced256fe851e00da82f91b4a5f6f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/sed-4.9-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "setup-0__2.14.5-2.oe2403.noarch",
+    sha256 = "3bf2ae763ea8654a214f9258bdab9f9a20f6bdc16ad06fcb1bada46531ac3bdb",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/setup-2.14.5-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "shadow-2__4.14.3-1.oe2403.riscv64",
+    sha256 = "075b1d2ed119263fb91542658a8988032b03460303f442b6ae37803340ce0448",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/shadow-4.14.3-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "shadow-subid-devel-2__4.14.3-1.oe2403.riscv64",
+    sha256 = "6b8b1052c51fcacd79b2806f4e32dc59cf577e8171a594f0fd16fae42ad3dec7",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/shadow-subid-devel-4.14.3-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "slang-0__2.3.3-2.oe2403.riscv64",
+    sha256 = "4a335449f2f123e58c4655a57521f5ca1c40e41a823ee18aca09659674b96b26",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/slang-2.3.3-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "sqlite-0__3.42.0-1.oe2403.riscv64",
+    sha256 = "3a74102bf962d08e7a99291f68163438b5962d5bd6f8c7c4b3f15f41d8d2c542",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/sqlite-3.42.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "systemd-0__255-17.oe2403.riscv64",
+    sha256 = "018112837c08756be67bed2cc3b0b6d34104ac5ad301873e5e29de6238378f9f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/systemd-255-17.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "systemd-libs-0__255-17.oe2403.riscv64",
+    sha256 = "0e7444b844060a47e5d00f8315033ef63d5adb8f0e35fd9723c594bfa9b993bd",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/systemd-libs-255-17.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "tar-2__1.35-2.oe2403.riscv64",
+    sha256 = "0dee7468fb48d1b3f4ebaf9891ebe9dc8096dce81e1806fceb00d468aafa7dad",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/tar-1.35-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "target-restore-0__2.1.76-2.oe2403.noarch",
+    sha256 = "cdd9fe17439b9bf1374a25534e66509e43e4b16bc5e0930f96ea5dfedc67172f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/target-restore-2.1.76-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "targetcli-0__2.1.56-3.oe2403.noarch",
+    sha256 = "ccff6013c0870f2aeeead6c99a40c14b98a070382053d13c89069b50ae506a00",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/targetcli-2.1.56-3.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "tcl-1__8.6.14-1.oe2403.riscv64",
+    sha256 = "6dc4d23a9229347a6c8811cf6790f85f9a63ffe50abd8947938c6692c6d05dd4",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/tcl-8.6.14-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "tzdata-0__2024a-2.oe2403.noarch",
+    sha256 = "b96e0e269df467a337fcf3a317d52e6a5fb8de2a2d08efc63fc04b4df1693dfa",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/tzdata-2024a-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "util-linux-0__2.39.1-7.oe2403.riscv64",
+    sha256 = "998308cb9b15d19f2e5c0fc5bee77acaffaf1f8ff903d71291a8478a8bd9b618",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/util-linux-2.39.1-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "vim-minimal-2__9.0.2092-3.oe2403.riscv64",
+    sha256 = "144083d5a54bac175cde20917323a6d48d2dcef30a106924f6def579dbc7e8f4",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/vim-minimal-9.0.2092-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "which-0__2.21-16.oe2403.riscv64",
+    sha256 = "c161a15041dfcbfaf64c2d1062c6a9b936bf77b6d99092edf33b13e2474e996a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/which-2.21-16.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "xz-libs-0__5.4.4-2.oe2403.riscv64",
+    sha256 = "d17ddb8a308e16c9084a3c5584fe913d27016b860e43f84d0f2729a94a506ff6",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/xz-libs-5.4.4-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "zlib-0__1.2.13-2.oe2403.riscv64",
+    sha256 = "d19c668b980ebb36f64b34933c49bb51b5621ed0c7cc14f2930f0c6886dffe61",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/zlib-1.2.13-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "zstd-0__1.5.5-1.oe2403.riscv64",
+    sha256 = "61ec0cdad3b367a52737ef39024b2d86f92c0befede4948c3ddda10163b28991",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/zstd-1.5.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "cyrus-sasl-0__2.1.28-2.oe2403.riscv64",
+    sha256 = "b827005c069df479f81270599090798c02cf9307f5aafcf7e65986d9425497e0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/cyrus-sasl-2.1.28-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libnl3-0__3.7.0-4.oe2403.riscv64",
+    sha256 = "2de3f0ebcb73a90c5572ab4bc9ea1a3ed84c1657061ce4cf441d94b14e181c39",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libnl3-3.7.0-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libvirt-devel-0__9.10.0-10.oe2403.riscv64",
+    sha256 = "718635aa965239c80748a8c18357b33f3a3a3d0cad05db5a955d190d580acee7",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libvirt-devel-9.10.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libvirt-libs-0__9.10.0-10.oe2403.riscv64",
+    sha256 = "6854c8d639a308bba367358f9f9021ecc2fcabb8881c5b2ed4a871f8d45dc23b",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libvirt-libs-9.10.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libxml2-0__2.11.5-3.oe2403.riscv64",
+    sha256 = "9b8ae760d112e956d51bb9039f01a92728eedf365210f7e6653f47320210f501",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libxml2-2.11.5-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "pkgconf-0__1.9.5-1.oe2403.riscv64",
+    sha256 = "3d54df1d85214b1e3c16187dd78f48f07248e4951f8ef4da31ee1e7770b3642f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/pkgconf-1.9.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "yajl-0__2.1.0-20.oe2403.riscv64",
+    sha256 = "4f68eac62b8b7761af8ad62dc6958178e5e00128d69d4c751ce2a6d9e0233095",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/yajl-2.1.0-20.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "binutils-0__2.41-5.oe2403.riscv64",
+    sha256 = "3cea715c548a566afd28c83b9acaf8c0f253a5ac400baee543285268601a67e9",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/binutils-2.41-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "cpp-0__12.3.1-30.oe2403.riscv64",
+    sha256 = "96d1160fa27088568f3bf2b2dc92fcbe44e395acab760fa94cf2bbd1fb749878",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/cpp-12.3.1-30.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "findutils-2__4.9.0-1.oe2403.riscv64",
+    sha256 = "50d1104a0cf2a17c3cf4aa99b148667e94e3ccd8d29961a4628f474eb8e05253",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/findutils-4.9.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gc-0__8.2.4-1.oe2403.riscv64",
+    sha256 = "4528bdb4cba3715db7131063700b9aa1b6206e2060adb6151c8325284cb5dcc2",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gc-8.2.4-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gcc-0__12.3.1-30.oe2403.riscv64",
+    sha256 = "34b38c45154a9cc337919aba26cb223345da744545d46cd485e855fcdd1f6c6c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gcc-12.3.1-30.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "glibc-devel-0__2.38-29.oe2403.riscv64",
+    sha256 = "9c8a317670eefd9022bcc8b386faa013b9fb48f5f2cda5658d2e62378cd3a409",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/glibc-devel-2.38-29.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "isl-0__0.24-2.oe2403.riscv64",
+    sha256 = "1287e8134dfa49b80bf79027ad656fbe086d33b2f09303124173518766dca3cd",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/isl-0.24-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "jansson-0__2.14-3.oe2403.riscv64",
+    sha256 = "f1cb6715872d43d4ef9f52add49b2acd8bfd367ac454a7cd28d8963528a10074",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/jansson-2.14-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "kernel-headers-0__6.6.0-27.0.0.31.oe2403.riscv64",
+    sha256 = "d6359a13c00ad492f42f5a52124cbded36c2913134b3dfe9cc821682290a5fed",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/kernel-headers-6.6.0-27.0.0.31.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libgomp-0__12.3.1-30.oe2403.riscv64",
+    sha256 = "bc39915b334c5b7f9b539c5a16c2bb9e72caee774449ae5d6dfbe31a5b0bcdac",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libgomp-12.3.1-30.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libmpc-0__1.3.1-1.oe2403.riscv64",
+    sha256 = "28c45da29affc9f7b27429df4903c20230b7caaf5d62eb3d4450e9c26ace5427",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libmpc-1.3.1-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libsss_idmap-0__2.9.4-5.oe2403.riscv64",
+    sha256 = "be42cc0e05a3403cc3f0140ea2e5eb29a38032ee161a938abf55ea89de9fd5b0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libsss_idmap-2.9.4-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libsss_nss_idmap-0__2.9.4-5.oe2403.riscv64",
+    sha256 = "66593b7916abc0b257d459a82c5c26c9e84c1fe0f3aee96e6a704eb53e0d0514",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libsss_nss_idmap-2.9.4-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libtool-ltdl-0__2.4.7-3.oe2403.riscv64",
+    sha256 = "e9e94a21acfaf55905c67e05dd472762040accd5c3795d7d20c59f12f7c27d10",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libtool-ltdl-2.4.7-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libxcrypt-devel-0__4.4.36-2.oe2403.riscv64",
+    sha256 = "5dbff29ce48abf4c7701e3d73144b28072b103d7275c90989146b3d1e247d2d1",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libxcrypt-devel-4.4.36-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "make-1__4.4.1-1.oe2403.riscv64",
+    sha256 = "e6c414f721af296e64beaaaccab6285e1898bea54a70b5070ffa6f0ccd840a43",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/make-4.4.1-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "sssd-client-0__2.9.4-5.oe2403.riscv64",
+    sha256 = "a08790cfcd330d5fb40f2d1ae606ed3800ab2b73c4e0896c4241c18f60138c24",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/sssd-client-2.9.4-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "audit-1__3.1.2-2.oe2403.riscv64",
+    sha256 = "86cabc348967c342f1b338699a11a8230312b8d1bdb8c07bc720e95ae8aa6795",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/audit-3.1.2-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "checkpolicy-0__3.5-1.oe2403.riscv64",
+    sha256 = "778ee23c7ed9088f02e63a40a015af5dd08fca966ee400fec11ce7c1206ec1b2",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/checkpolicy-3.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "crontabs-0__1.11-23.oe2403.noarch",
+    sha256 = "ebbad9fca9fbfcc03f03a1a5c33524f12f06ee72e225a77c74fc0d7c2937047b",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/crontabs-1.11-23.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "dbus-1__1.14.8-2.oe2403.riscv64",
+    sha256 = "9d9cc5a2c79a0300473473c602e361d17659cb1117ca0da418c0cddf6e46a1ed",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/dbus-1.14.8-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "dbus-common-1__1.14.8-2.oe2403.noarch",
+    sha256 = "af7b71cfca3f4e4f7987f4a08e4b9e9c43106dc1f2533dc6a60c8f826570accb",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/dbus-common-1.14.8-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "dbus-daemon-1__1.14.8-2.oe2403.riscv64",
+    sha256 = "136668605257075508c0c8773b36a66417c92cc1e7a263aebef8879b57b0ac7c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/dbus-daemon-1.14.8-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "dbus-tools-1__1.14.8-2.oe2403.riscv64",
+    sha256 = "600a3764e995b535d052d39ea3b0753835a55000c9efa25dbcb289d32ae43594",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/dbus-tools-1.14.8-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "diffutils-0__3.10-2.oe2403.riscv64",
+    sha256 = "79f0461013e5fdcd67197cb747e0753622d380288dcfdcc23c1d24bb461e7db2",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/diffutils-3.10-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "dtc-0__1.7.0-2.oe2403.riscv64",
+    sha256 = "2f4a0f64050c0e6ed23909098b3526dd199d20993ca51b4b9c14c8812155e367",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/dtc-1.7.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "duktape-0__2.7.0-2.oe2403.riscv64",
+    sha256 = "dfd5509a1368886fde3f8cbc8661b2b28a721dcc5b8fcf8a45903763faee433d",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/duktape-2.7.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "edk2-devel-0__202308-7.oe2403.riscv64",
+    sha256 = "878ee102e1845a072ed4b00530a28013326cb9556c12daeef4578da5912b6f68",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/edk2-devel-202308-7.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "elfutils-default-yama-scope-0__0.190-3.oe2403.noarch",
+    sha256 = "890ea120c9cc573ec04f872cdcecda4fb515481ae07edb2aaca7caf1516060eb",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/elfutils-default-yama-scope-0.190-3.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "elfutils-libelf-0__0.190-3.oe2403.riscv64",
+    sha256 = "a46bf0128ddbb7b3c588596b8aacff29b048f568bcc9ba6e2debc5021c8bc14d",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/elfutils-libelf-0.190-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "elfutils-libs-0__0.190-3.oe2403.riscv64",
+    sha256 = "0ffb220013122b7692eb6d87b1e3b0fd03a228a207c7e34aeceed5d060ecdbdb",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/elfutils-libs-0.190-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "ethtool-2__6.6-3.oe2403.riscv64",
+    sha256 = "8558a371aa7cc25c83d9a2d1fdd86fa5fe0aa59fd1a1ac0537a06f984f6341bf",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/ethtool-6.6-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "file-libs-0__5.45-1.oe2403.riscv64",
+    sha256 = "a62f92beb7f314c5954eeee8b28d158adc0825dbcef0864a2623abc703ee543a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/file-libs-5.45-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gettext-0__0.22-2.oe2403.riscv64",
+    sha256 = "7763edce02c523fde792734f3b6971ff3c8b0e8c3105c0355616af449d117c59",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gettext-0.22-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gnutls-dane-0__3.8.2-4.oe2403.riscv64",
+    sha256 = "c848ca21ebfb284548d5e967b181f598b8f54255618f318fc0120c912c725232",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gnutls-dane-3.8.2-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "gnutls-utils-0__3.8.2-4.oe2403.riscv64",
+    sha256 = "67cb444ce70d7568e971fe87b8611d9f9446398ce265c9ec7fd5dc637694458e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/gnutls-utils-3.8.2-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "ima-evm-utils-libs-0__1.5-1.oe2403.riscv64",
+    sha256 = "3d2af949e907512abd8f1c2949e8215f85b456b4de0b05fd2acbb9f4067a41af",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/ima-evm-utils-libs-1.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "iproute-1__6.6.0-3.oe2403.riscv64",
+    sha256 = "be31b33608e521869dfb5c3e9b053e4fb26d8336d89f1ad6331b4b759e012b35",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/iproute-6.6.0-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "iptables-libs-0__1.8.9-3.oe2403.riscv64",
+    sha256 = "5162c485db6d5ab556690e4795d75980c83d6c59eff803c8a95a1689f20c0ffe",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/iptables-libs-1.8.9-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "json-glib-0__1.8.0-1.oe2403.riscv64",
+    sha256 = "1a5cdaf892d97043eb4da98ff09242af5d82bc316551123d2b5292f933f6aa4d",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/json-glib-1.8.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "kde-filesystem-0__5-1.oe2403.riscv64",
+    sha256 = "445bcb266a4425ea95a6ca0340eeec4fac22a44cde9d130057245132ebe8b5c8",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/kde-filesystem-5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "kpartx-0__0.9.5-1.oe2403.riscv64",
+    sha256 = "30ce59934dd377c045dccf378d1b0581f60efa6611039622b3ac47a887509132",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/kpartx-0.9.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libX11-0__1.8.7-2.oe2403.riscv64",
+    sha256 = "72099cce7b20f2045dbb66de4964966af987f2f85fb7fe4627cd9dc02b7f78fa",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libX11-1.8.7-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libXau-0__1.0.11-1.oe2403.riscv64",
+    sha256 = "01f4070d49a28e03bea019022a09e38eb3c1c6eecd6b0ee1206f2466f1aade26",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libXau-1.0.11-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libarchive-0__3.7.1-2.oe2403.riscv64",
+    sha256 = "8ba3dce265752965f0a460b0ab58d541965b20e5b0756ffa2abb53b3a708f5f2",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libarchive-3.7.1-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libatomic-0__12.3.1-30.oe2403.riscv64",
+    sha256 = "77ba4a34f28f2a27e1a4d0b45cf03d6f0f6d0c5c34bfacdda29cdc2ad2b3eb9a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libatomic-12.3.1-30.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libbpf-2__1.2.2-3.oe2403.riscv64",
+    sha256 = "d50daf52a4b380d7993c13410d1b3d56426566feb7ace5530b1de51ad49f4332",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libbpf-1.2.2-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libburn-0__1.5.6-1.oe2403.riscv64",
+    sha256 = "491fb8351667f5a6db3ce97f0f5e630e3ce667c8271755cf3c1034ec971e9503",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libburn-1.5.6-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libdrm-0__2.4.119-1.oe2403.riscv64",
+    sha256 = "644b98f909bfe8048ac0a2e6dc803390b2fc5d4e681cb206d796a35319c01202",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libdrm-2.4.119-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libedit-0__3.1-31.oe2403.riscv64",
+    sha256 = "c35fec45c76ff8b1a48c4d686fca062e98fb1d33d5f63f4be501aa35543ba2e6",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libedit-3.1-31.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libepoxy-0__1.5.10-2.oe2403.riscv64",
+    sha256 = "65919787568fbff012a64d63789c00ff20f7da567431c9860bc70c49b3f3e88f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libepoxy-1.5.10-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libibverbs-0__50.0-10.oe2403.riscv64",
+    sha256 = "9a88e5c93af9e22caf6548e418e7a8b457e946cf3e02ff41888e486da6e5927a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libibverbs-50.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libiscsi-0__1.19.0-10.oe2403.riscv64",
+    sha256 = "58e04248704ce6315ead5e3670862a3de664278cc555c52478d8e3909b13e1c0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libiscsi-1.19.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libisoburn-0__1.5.6-1.oe2403.riscv64",
+    sha256 = "17336296bfd75bc8452efdf2c078e003be4b58963716d54a18adc96686eaade5",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libisoburn-1.5.6-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libisofs-0__1.5.6-1.oe2403.riscv64",
+    sha256 = "42d858f887723626a01d2efe84c8f82452b50a5ba339d1bbd7e6997125de047e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libisofs-1.5.6-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libjpeg-turbo-0__3.0.1-2.oe2403.riscv64",
+    sha256 = "a4298c64c39a2b04d66613c077b9231cae45b020b6ff605f9812af0f564cd016",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libjpeg-turbo-3.0.1-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libmnl-0__1.0.5-2.oe2403.riscv64",
+    sha256 = "c4e1c9d7493be13f082e7b2f48d398cd8947f54aa450037030778333542f770e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libmnl-1.0.5-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libnetfilter_conntrack-0__1.0.9-4.oe2403.riscv64",
+    sha256 = "478e51b3a5627bf29a57406f9096f5cebfbd56e6a889d77edcdbe12655c3c671",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libnetfilter_conntrack-1.0.9-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libnfnetlink-0__1.0.2-2.oe2403.riscv64",
+    sha256 = "84634b16afc74a4437ccb8900d27534986c20bc35032fb7dda344034dd28c006",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libnfnetlink-1.0.2-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libnftnl-0__1.2.6-2.oe2403.riscv64",
+    sha256 = "95c4a0945dab525fdc68d8c6be11d50cc7924b39061aaebee5318b5fffe3d362",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libnftnl-1.2.6-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "librdmacm-0__50.0-10.oe2403.riscv64",
+    sha256 = "9448cdf60956f5c692774e373b6d9ab8acd0c8083ced3d1d27d1c0d2d3c479ab",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/librdmacm-50.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libslirp-0__4.7.0-2.oe2403.riscv64",
+    sha256 = "c76b6ebcbb9429fbe6b68bcff61b7407ee9abd5fa130bc3ccc0728eb03ba39b0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libslirp-4.7.0-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libtpms-0__0.9.5-4.oe2403.riscv64",
+    sha256 = "c403cc154d105017041d6dd0f6a0eea496c642e17890e21c44a9e95eab898aea",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libtpms-0.9.5-4.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libusbx-0__1.0.26-1.oe2403.riscv64",
+    sha256 = "ad369ff41d910d2aa3fbec2c27fdbb19c8f32c6c72d7f9efacb97910ea5978d6",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libusbx-1.0.26-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libvirt-client-0__9.10.0-10.oe2403.riscv64",
+    sha256 = "61abd50eb934bf84c063ad80148085a7a0409e410f67974d217e7561a35b0b17",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libvirt-client-9.10.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libvirt-daemon-0__9.10.0-10.oe2403.riscv64",
+    sha256 = "5a13dc845380fa4ebb6d1286b867b2e72931059e30a26b72b57fe6f9dc8ee659",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libvirt-daemon-9.10.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libvirt-daemon-common-0__9.10.0-10.oe2403.riscv64",
+    sha256 = "522c57c69b56a5f1c35f6747fc245d237157340d9280c7a1adf7d2ca10983787",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libvirt-daemon-common-9.10.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libvirt-daemon-driver-qemu-0__9.10.0-10.oe2403.riscv64",
+    sha256 = "d58085451e4617f8ab985df879d21aa26835ef12952fe31b5ef3cefeed320200",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libvirt-daemon-driver-qemu-9.10.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libvirt-daemon-log-0__9.10.0-10.oe2403.riscv64",
+    sha256 = "64c5e3cbe24cb3c7d0afa9cfb995ec6a4283a4a8f950b120fc70468764ff1b08",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libvirt-daemon-log-9.10.0-10.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libxcb-0__1.16-1.oe2403.riscv64",
+    sha256 = "db0f1ca2223741af16bf19dfd78a9bb7b5681784d3ca402afe982639d97e8511",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libxcb-1.16-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "libxkbcommon-0__1.6.0-1.oe2403.riscv64",
+    sha256 = "8ec4e44d9b92caae1e44bb0789603dac11f227dbb8d7aac1405d283591786a8a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/libxkbcommon-1.6.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "logrotate-0__3.21.0-1.oe2403.riscv64",
+    sha256 = "a695633955d820db8a3def996913e816618d745f7f396d138ce9fdeab49f644a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/logrotate-3.21.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "lua-0__5.4.6-1.oe2403.riscv64",
+    sha256 = "dfe476663e852047e411090c4468e2035064b3590f994016820ee489ce8c8a35",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/lua-5.4.6-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "lzo-0__2.10-5.oe2403.riscv64",
+    sha256 = "80b2690118c0e6e2749ee4e60781f5a07fac733b1e44dbb7d77e21da0a46b04b",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/lzo-2.10-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "lzop-0__1.04-3.oe2403.riscv64",
+    sha256 = "4e47b6bf4165f43500df118be0671b6091af3f8af65b75ea326c47d7ee572b86",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/lzop-1.04-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "mesa-libgbm-0__24.0.3-2.oe2403.riscv64",
+    sha256 = "cdf2bf6876c60f567c99df12114f5bd1299f50983f37b4c4df3718e6edfc4114",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/mesa-libgbm-24.0.3-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "multipath-tools-0__0.9.5-1.oe2403.riscv64",
+    sha256 = "df71ea9c3afad502b4726e727c0008e155926c8f9c3e5af22b33de32cbb7b13e",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/multipath-tools-0.9.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "nftables-1__1.0.8-3.oe2403.riscv64",
+    sha256 = "faaaa40122297341cc4df08831e470ac13bec444879b05cc747a70656e237dcb",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/nftables-1.0.8-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "openssl-1__3.0.12-5.oe2403.riscv64",
+    sha256 = "b373b8ed0b1f226fcb07c15bca44f5a1c90c85f91a42804418af854fcbf0aae2",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/openssl-3.0.12-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "pixman-0__0.42.2-1.oe2403.riscv64",
+    sha256 = "d4dc71ec91c2a5d00202b2ee00aaca85f8689d48631192d4f40dcaf036f15ce2",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/pixman-0.42.2-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "policycoreutils-0__3.5-3.oe2403.riscv64",
+    sha256 = "7a4d70ffdf3ad65ec6d7e4c830a39d6ddd9acb1a8ae2e4d5876894037d742f62",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/policycoreutils-3.5-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "policycoreutils-python-utils-0__3.5-3.oe2403.noarch",
+    sha256 = "9cde905718dc4ecfac938d607aab8ae89da6f6baa59d32494df963f59bea92cb",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/policycoreutils-python-utils-3.5-3.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "polkit-0__123-1.oe2403.riscv64",
+    sha256 = "8fac64c1b1214cb38c88a7a1e4cc9597df46e87735772fe7a8e1fb91c18ce67f",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/polkit-123-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "polkit-libs-0__123-1.oe2403.riscv64",
+    sha256 = "20226c74c640bbe5ea423a5febb08d665c32351c3ef2bc199be640d6d7a6bee9",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/polkit-libs-123-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "polkit-pkla-compat-0__0.1-21.oe2403.riscv64",
+    sha256 = "893aa97ec259048acd5023056befc9c7aa54630352c7e0d50649a5106f4a4bb0",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/polkit-pkla-compat-0.1-21.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "psmisc-0__23.6-1.oe2403.riscv64",
+    sha256 = "04f4ef0c2231c35fdc4d903020c7f8ec1b4672209a9ac912b0e5cf6ee4a32694",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/psmisc-23.6-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-IPy-0__1.01-2.oe2403.noarch",
+    sha256 = "2f72fe86a632efe2c8b448989e3f47cd5b28f56977dc9d64ce588a5a604e6cc1",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-IPy-1.01-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-audit-1__3.1.2-2.oe2403.riscv64",
+    sha256 = "61c8e89d77799d8064c0f5b5e227f8c284d36c52d73067fdef0e9edeefb43f8b",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-audit-3.1.2-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-libselinux-0__3.5-3.oe2403.riscv64",
+    sha256 = "aea8e11f1b29474182821b545e9257e4d8b596db56a3a070d3a26c6f5abb692b",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-libselinux-3.5-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-libsemanage-0__3.5-1.oe2403.riscv64",
+    sha256 = "d7ae124857f11564462844082a47add57c3e3d90786be0c2d47aa4d4f0fc4229",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-libsemanage-3.5-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-policycoreutils-0__3.5-3.oe2403.noarch",
+    sha256 = "3f42902a9dcd40411af2837f00c4ab9e9a2daca4d973ccd0c600d70f6f80d94a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-policycoreutils-3.5-3.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-setools-0__4.4.3-1.oe2403.riscv64",
+    sha256 = "1027197d063140763debbb3eef1d548b9341781d4a4835bbd65fbbc2113a6614",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-setools-4.4.3-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "python3-setuptools-0__68.0.0-1.oe2403.noarch",
+    sha256 = "b515ffa5763e70058b63da194c43dfb611c33b35815c476effd11e374d73fe7c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/python3-setuptools-68.0.0-1.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "qemu-11__8.2.0-13.oe2403.riscv64",
+    sha256 = "ba1f1e7f82dc4b968e329b38ca2d187143eae42dba7d15142ab8c739b4f3ada1",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/qemu-8.2.0-13.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "qemu-system-riscv-11_8.2.0-13.oe2403.riscv64",
+    sha256 = "5bf9863cae953fafa6be184f4b5bff0e7f7352e823c0545b72fa0b7519831665",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/qemu-system-riscv-8.2.0-13.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "qemu-block-curl-11__8.2.0-13.oe2403.riscv64",
+    sha256 = "01172a0d6552a8b72451bb5063de3565f4285170efc4e83684b9e37f87be2126",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/qemu-block-curl-8.2.0-13.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "qemu-block-iscsi-11__8.2.0-13.oe2403.riscv64",
+    sha256 = "39fb4ea0fe0776788d8deae41f09707ad6b0d1f753e75a4cf8062c7c075f7520",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/qemu-block-iscsi-8.2.0-13.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "qemu-hw-usb-host-11__8.2.0-13.oe2403.riscv64",
+    sha256 = "f2e4f93d961ddc932c273dcc7ef4e762b41ac33079d3d04b85165128a0b75be7",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/qemu-hw-usb-host-8.2.0-13.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "rpm-0__4.18.2-5.oe2403.riscv64",
+    sha256 = "019e9f1f1532f19e9b8d02f72d0e70d87f28b12a686a210f8d245fa0e9c50f08",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/rpm-4.18.2-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "rpm-libs-0__4.18.2-5.oe2403.riscv64",
+    sha256 = "b3e6b0c55be4ff891420c63b209a42a1dc43551c5b5e3c15f39af35831024ae1",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/rpm-libs-4.18.2-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "selinux-policy-0__40.7-2.oe2403.noarch",
+    sha256 = "4788198beecda1efbf2443b17edb6faadaca72d764ed2022e5f2688b8f5a69a6",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/selinux-policy-40.7-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "selinux-policy-minimum-0__40.7-2.oe2403.noarch",
+    sha256 = "bcef2c124d8d15c9fe491675538c37c0a52662e891acfdf6dd1a0426592eb653",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/selinux-policy-minimum-40.7-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "selinux-policy-targeted-0__40.7-2.oe2403.noarch",
+    sha256 = "9903081ea7d699c58c69f12d00476096d0114186f5cb9243d347d422bca3a64a",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/selinux-policy-targeted-40.7-2.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "snappy-0__1.1.10-2.oe2403.riscv64",
+    sha256 = "4b1288f620851951dba6887a91f01ab92f108150df2226067a38172624999fd8",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/snappy-1.1.10-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "swtpm-0__0.8.0-3.oe2403.riscv64",
+    sha256 = "dbf76c0d497e6f1b1f4cb3afca6792d7c53f91742575e1f1673d2d2eb8c45928",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/swtpm-0.8.0-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "swtpm-libs-0__0.8.0-3.oe2403.riscv64",
+    sha256 = "364d9e75a4141e31af59b0e188df92738b72572864b0be26fee5453192b61081",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/swtpm-libs-0.8.0-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "swtpm-tools-0__0.8.0-3.oe2403.riscv64",
+    sha256 = "097faf74e8483286dcbf04d468a11350a59b130da165ac4b9d168559f920943c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/swtpm-tools-0.8.0-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "systemd-container-0__255-17.oe2403.riscv64",
+    sha256 = "d77525be56397375e15e79a261bf81ecd0c075037462b909a29f2318bda2ccda",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/systemd-container-255-17.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "tpm2-tss-0__4.0.1-3.oe2403.riscv64",
+    sha256 = "e4ba78372315c2aae2abc37dbb7093123f4d3b8a8373a92a49a58653d06d648c",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/tpm2-tss-4.0.1-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "trousers-0__0.3.15-1.oe2403.riscv64",
+    sha256 = "f3c2bdaa4d75e4423685c96246cc84fc7758870f3febc51561c93132834b20ed",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/trousers-0.3.15-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "unbound-libs-0__1.17.1-5.oe2403.riscv64",
+    sha256 = "46e017c82d24b84ec44a6927c3753d4d1d25deced401cfa42fef10d2bc910554",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/unbound-libs-1.17.1-5.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "userspace-rcu-0__0.14.0-1.oe2403.riscv64",
+    sha256 = "a4a688c26aeedf474a9f5db55b3ad5c979b39ce5ceb031ad2e19fb5587ee571b",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/userspace-rcu-0.14.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "virglrenderer-0__0.8.2-3.oe2403.riscv64",
+    sha256 = "4994334757b8e41e40b14bf46f5403c8208b9deed1628d02ab0de1b9b7f7ebcf",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/virglrenderer-0.8.2-3.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "virtiofsd-0__1.10.1-2.oe2403.riscv64",
+    sha256 = "bc8c4bb01f5d9ec98e8728b7a6cc9c4879da6513e63e824d779a81c89984026d",
+    urls = [
+        "https://mirrors.aliyun.com/openeuler/openEuler-24.03-LTS/EPOL/main/riscv64/Packages/virtiofsd-1.10.1-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "wayland-0__1.22.0-1.oe2403.riscv64",
+    sha256 = "b872b10a33dff7df0a9b7db34fa1415053bedeef21b6936c62d8d92fab8b3297",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/wayland-1.22.0-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "xkeyboard-config-0__2.39-3.oe2403.noarch",
+    sha256 = "f0a29990cdf19c38a47374c5104089b5f74513c379aff991b969faff38b4b10d",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/xkeyboard-config-2.39-3.oe2403.noarch.rpm",
+    ],
+)
+
+rpm(
+    name = "xorriso-0__1.5.6-1.oe2403.riscv64",
+    sha256 = "99c9e7fa797ed2719a6e69d8410ef3980d5e7b05d3ca1d155a390fffa70a9814",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/xorriso-1.5.6-1.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "xz-0__5.4.4-2.oe2403.riscv64",
+    sha256 = "315c5b8be73dc7abd106188a54168e602be77bc61be601461cd953ad3c9bbf29",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/xz-5.4.4-2.oe2403.riscv64.rpm",
+    ],
+)
+
+rpm(
+    name = "edk2-ovmf-riscv64-0__202308-7.oe2403.noarch",
+    sha256 = "b10747fd9ab21efdec7aeed075c6da2ce3f3f438164cd8983afa86774131af14",
+    urls = [
+        "https://repo.openeuler.org/openEuler-24.03-LTS/everything/riscv64/Packages/edk2-ovmf-riscv64-202308-7.oe2403.noarch.rpm",
+    ],
+)
+
+http_file(
+    name = "riscv_virt_code_fd_",
+    sha256 = "758ce83631eb93a7b19d5f2f9ac84f34f9f8854e71698e4a088920aa86f03fd5",
+    urls = ["https://dl-cdn.openeuler.openatom.cn/openEuler-24.03-LTS/virtual_machine_img/riscv64/RISCV_VIRT_CODE.fd"],
+)
+
+http_file(
+    name = "riscv_virt_vars_fd_",
+    sha256 = "cbc804cabde37783e1d04ecf5c40df35faad1dc6114678e2c2c309a14b2fa568",
+    urls = ["https://dl-cdn.openeuler.openatom.cn/openEuler-24.03-LTS/virtual_machine_img/riscv64/RISCV_VIRT_VARS.fd"],
 )

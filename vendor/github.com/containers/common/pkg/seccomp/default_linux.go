@@ -19,6 +19,10 @@ func arches() []Architecture {
 			SubArches: []Arch{ArchARM},
 		},
 		{
+			Arch:      ArchRISCV64,
+			SubArches: []Arch{ArchRISCV64},
+		},
+		{
 			Arch:      ArchMIPS64,
 			SubArches: []Arch{ArchMIPS, ArchMIPS64N32},
 		},

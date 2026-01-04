@@ -173,3 +173,168 @@ var _ = Describe("[sig-compute]VMI with external kernel boot", decorators.SigCom
 		})
 	})
 })
+
+var _ = Describe("[sig-compute]VMI with external cirros kernel boot", decorators.SigCompute, func() {
+
+	var virtClient kubecli.KubevirtClient
+	var err error
+
+	BeforeEach(func() {
+		virtClient = kubevirt.Client()
+	})
+
+	Context("with external cirros-based kernel & initrd images", func() {
+
+		It("ensure successful boot", func() {
+			vmi := libvmifact.NewCirros()
+			utils.AddKernelBootToVMI(vmi)
+			kernelBoot := vmi.Spec.Domain.Firmware.KernelBoot
+			kernelBoot.Container.KernelPath = "/boot/cirros-kernel"
+			kernelBoot.Container.InitrdPath = "/boot/cirros-initramfs"
+
+			vmi, err = virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+				Create(context.Background(), vmi, metav1.CreateOptions{})
+			Expect(err).ToNot(HaveOccurred())
+			libwait.WaitForSuccessfulVMIStart(vmi)
+		})
+
+		It("ensure successful boot and deletion when VMI has a disk defined", func() {
+			By("Creating VMI with disk and kernel boot")
+			vmi := libvmifact.NewCirros(libvmi.WithResourceMemory("512Mi"))
+			utils.AddKernelBootToVMI(vmi)
+			kernelBoot := vmi.Spec.Domain.Firmware.KernelBoot
+			kernelBoot.Container.KernelPath = "/boot/cirros-kernel"
+			kernelBoot.Container.InitrdPath = "/boot/cirros-initramfs"
+
+			Expect(vmi.Spec.Volumes).ToNot(BeEmpty())
+			Expect(vmi.Spec.Domain.Devices.Disks).ToNot(BeEmpty())
+
+			By("Ensuring VMI can boot")
+			vmi, err = virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+				Create(context.Background(), vmi, metav1.CreateOptions{})
+			Expect(err).ToNot(HaveOccurred())
+			libwait.WaitForSuccessfulVMIStart(vmi)
+
+			By("Fetching virt-launcher pod")
+			virtLauncherPod, err := libpod.GetPodByVirtualMachineInstance(vmi, vmi.Namespace)
+			Expect(err).NotTo(HaveOccurred())
+
+			By("Ensuring VMI is deleted")
+			err = virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+				Delete(context.Background(), vmi.Name, v1.DeleteOptions{})
+			Expect(err).ToNot(HaveOccurred())
+			Eventually(func() error {
+				_, err = virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+					Get(context.Background(), vmi.Name, v1.GetOptions{})
+				return err
+			}, 60*time.Second, 3*time.Second).Should(MatchError(errors.IsNotFound, "k8serrors.IsNotFound"),
+				"VMI Should be successfully deleted")
+
+			By("Ensuring virt-launcher is deleted")
+			Eventually(func() error {
+				_, err = virtClient.CoreV1().Pods(virtLauncherPod.Namespace).
+					Get(context.Background(), virtLauncherPod.Name, v1.GetOptions{})
+				return err
+			}, 60*time.Second, 3*time.Second).Should(MatchError(errors.IsNotFound, "k8serrors.IsNotFound"),
+				fmt.Sprintf("virt-launcher pod (%s) Should be successfully deleted", virtLauncherPod.Name))
+		})
+	})
+
+	Context("with illegal definition ensure rejection of", func() {
+
+		It("VMI defined without an image", func() {
+			vmi := libvmifact.NewCirros()
+			utils.AddKernelBootToVMI(vmi)
+			kernelBoot := vmi.Spec.Domain.Firmware.KernelBoot
+			kernelBoot.Container.KernelPath = "/boot/cirros-kernel"
+			kernelBoot.Container.InitrdPath = "/boot/cirros-initramfs"
+
+			kernelBoot.Container.Image = ""
+
+			_, err := virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+				Create(context.Background(), vmi, metav1.CreateOptions{})
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring(
+				"denied the request: spec.domain.firmware.kernelBoot.container must be defined with an image"))
+		})
+
+		It("VMI defined with image but without initrd & kernel paths", func() {
+			vmi := libvmifact.NewCirros()
+			utils.AddKernelBootToVMI(vmi)
+
+			kernelBoot := vmi.Spec.Domain.Firmware.KernelBoot
+			kernelBoot.Container.KernelPath = ""
+			kernelBoot.Container.InitrdPath = ""
+
+			_, err := virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+				Create(context.Background(), vmi, metav1.CreateOptions{})
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring(
+				"denied the request: spec.domain.firmware.kernelBoot.container must be defined with at least one of the following: kernelPath, initrdPath"))
+		})
+	})
+
+	Context("with external cirros-based kernel only (without initrd)", func() {
+
+		getVMIKernelBoot := func() *kubevirtv1.VirtualMachineInstance {
+			vmi := libvmifact.NewCirros()
+			utils.AddKernelBootToVMI(vmi)
+
+			kernelBoot := vmi.Spec.Domain.Firmware.KernelBoot
+			kernelBoot.Container.KernelPath = "/boot/cirros-kernel"
+			kernelBoot.Container.InitrdPath = ""
+			return vmi
+		}
+
+		It("ensure successful boot", func() {
+			vmi := getVMIKernelBoot()
+
+			vmi, err = virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+				Create(context.Background(), vmi, metav1.CreateOptions{})
+			Expect(err).ToNot(HaveOccurred())
+			libwait.WaitForSuccessfulVMIStart(vmi)
+		})
+
+		It("ensure successful boot and deletion when VMI has a disk defined", func() {
+			By("Creating VMI with disk and kernel boot")
+			vmi := libvmifact.NewCirros(libvmi.WithResourceMemory("512Mi"))
+			utils.AddKernelBootToVMI(vmi)
+
+			kernelBoot := vmi.Spec.Domain.Firmware.KernelBoot
+			kernelBoot.Container.KernelPath = "/boot/cirros-kernel"
+			kernelBoot.Container.InitrdPath = ""
+
+			Expect(vmi.Spec.Volumes).ToNot(BeEmpty())
+			Expect(vmi.Spec.Domain.Devices.Disks).ToNot(BeEmpty())
+
+			By("Ensuring VMI can boot")
+			vmi, err = virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+				Create(context.Background(), vmi, metav1.CreateOptions{})
+			Expect(err).ToNot(HaveOccurred())
+			libwait.WaitForSuccessfulVMIStart(vmi)
+
+			By("Fetching virt-launcher pod")
+			virtLauncherPod, err := libpod.GetPodByVirtualMachineInstance(vmi, vmi.Namespace)
+			Expect(err).NotTo(HaveOccurred())
+
+			By("Ensuring VMI is deleted")
+			err = virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+				Delete(context.Background(), vmi.Name, v1.DeleteOptions{})
+			Expect(err).ToNot(HaveOccurred())
+			Eventually(func() error {
+				_, err = virtClient.VirtualMachineInstance(testsuite.GetTestNamespace(vmi)).
+					Get(context.Background(), vmi.Name, v1.GetOptions{})
+				return err
+			}, 60*time.Second, 3*time.Second).Should(MatchError(errors.IsNotFound, "k8serrors.IsNotFound"),
+				"VMI Should be successfully deleted")
+
+			By("Ensuring virt-launcher is deleted")
+			Eventually(func() error {
+				_, err = virtClient.CoreV1().Pods(virtLauncherPod.Namespace).
+					Get(context.Background(), virtLauncherPod.Name, v1.GetOptions{})
+				return err
+			}, 60*time.Second, 3*time.Second).Should(MatchError(errors.IsNotFound, "k8serrors.IsNotFound"),
+				fmt.Sprintf("virt-launcher pod (%s) Should be successfully deleted", virtLauncherPod.Name))
+		})
+	})
+})

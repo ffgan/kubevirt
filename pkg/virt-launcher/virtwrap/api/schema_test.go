@@ -42,6 +42,10 @@ var (
 	exampleXMLarm64                   string
 	exampleXMLarm64withNoneMemballoon string
 
+	//go:embed testdata/domain_riscv64.xml.tmpl
+	exampleXMLriscv64                   string
+	exampleXMLriscv64withNoneMemballoon string
+
 	//go:embed testdata/domain_numa_topology.xml
 	domainNumaTopology []byte
 
@@ -71,6 +75,9 @@ var _ = ginkgo.Describe("Schema", func() {
 
 	exampleXMLarm64withNoneMemballoon = templateToString(exampleXMLarm64, argNoMemBalloon)
 	exampleXMLarm64 = templateToString(exampleXMLarm64, argMemBalloonVirtio)
+
+	exampleXMLriscv64withNoneMemballoon = templateToString(exampleXMLriscv64, argNoMemBalloon)
+	exampleXMLriscv64 = templateToString(exampleXMLriscv64, argMemBalloonVirtio)
 
 	//The example domain should stay in sync to the xml above
 	var exampleDomain *Domain
@@ -225,12 +232,14 @@ var _ = ginkgo.Describe("Schema", func() {
 			unmarshalTest(arch, domainStr, exampleDomain)
 		},
 			ginkgo.Entry("for arm64", "arm64", exampleXMLarm64),
+			ginkgo.Entry("for riscv64", "riscv64", exampleXMLriscv64),
 			ginkgo.Entry("for amd64", "amd64", exampleXML),
 		)
 		ginkgo.DescribeTable("Marshal into xml", func(arch string, domainStr string) {
 			marshalTest(arch, domainStr, exampleDomain)
 		},
 			ginkgo.Entry("for arm64", "arm64", exampleXMLarm64),
+			ginkgo.Entry("for riscv64", "riscv64", exampleXMLriscv64),
 			ginkgo.Entry("for amd64", "amd64", exampleXML),
 		)
 
@@ -238,12 +247,14 @@ var _ = ginkgo.Describe("Schema", func() {
 			unmarshalTest(arch, domainStr, exampleDomainWithMemballonDevice)
 		},
 			ginkgo.Entry("for arm64 and Memballoon device is specified", "arm64", exampleXMLarm64withNoneMemballoon),
+			ginkgo.Entry("for riscv64 and Memballoon device is specified", "riscv64", exampleXMLriscv64withNoneMemballoon),
 			ginkgo.Entry("for amd64 and Memballoon device is specified", "amd64", exampleXMLwithNoneMemballoon),
 		)
 		ginkgo.DescribeTable("Marshal into xml", func(arch string, domainStr string) {
 			marshalTest(arch, domainStr, exampleDomainWithMemballonDevice)
 		},
 			ginkgo.Entry("for arm64 and Memballoon device is specified", "arm64", exampleXMLarm64withNoneMemballoon),
+			ginkgo.Entry("for riscv64 and Memballoon device is specified", "riscv64", exampleXMLriscv64withNoneMemballoon),
 			ginkgo.Entry("for amd64 and Memballoon device is specified", "amd64", exampleXMLwithNoneMemballoon),
 		)
 	})

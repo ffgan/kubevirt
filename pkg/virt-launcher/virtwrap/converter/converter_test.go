@@ -68,6 +68,8 @@ var (
 	embedDomainTemplateX86_64 string
 	//go:embed testdata/domain_arm64.xml.tmpl
 	embedDomainTemplateARM64 string
+	//go:embed testdata/domain_riscv64.xml.tmpl
+	embedDomainTemplateRISCV64 string
 	//go:embed testdata/domain_s390x.xml.tmpl
 	embedDomainTemplateS390X string
 	//go:embed testdata/domain_x86_64_root.xml.tmpl
@@ -78,6 +80,7 @@ const (
 	blockPVCName = "pvc_block_test"
 	amd64        = "amd64"
 	arm64        = "arm64"
+	riscv64      = "riscv64"
 	s390x        = "s390x"
 )
 
@@ -91,6 +94,7 @@ func MultiArchEntry(text string, args ...interface{}) []TableEntry {
 	return []TableEntry{
 		Entry(fmt.Sprintf("%s on %s", text, amd64), append([]interface{}{amd64}, args...)...),
 		Entry(fmt.Sprintf("%s on %s", text, arm64), append([]interface{}{arm64}, args...)...),
+		Entry(fmt.Sprintf("%s on %s", text, riscv64), append([]interface{}{riscv64}, args...)...),
 		Entry(fmt.Sprintf("%s on %s", text, s390x), append([]interface{}{s390x}, args...)...),
 	}
 }
@@ -196,6 +200,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("on amd64", amd64, "virtio-non-transitional"),
 			Entry("on arm64", arm64, "virtio-non-transitional"),
+			Entry("on riscv64", riscv64, "virtio-non-transitional"),
 			Entry("on s390x", s390x, "virtio"),
 		)
 
@@ -249,6 +254,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("on amd64", amd64, "virtio-non-transitional"),
 			Entry("on arm64", arm64, "virtio-non-transitional"),
+			Entry("on riscv64", riscv64, "virtio-non-transitional"),
 			Entry("on s390x", s390x, "virtio"),
 		)
 
@@ -296,6 +302,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("on amd64", amd64, "virtio-non-transitional"),
 			Entry("on arm64", arm64, "virtio-non-transitional"),
+			Entry("on riscv64", riscv64, "virtio-non-transitional"),
 			Entry("on s390x", s390x, "virtio"),
 		)
 	})
@@ -602,6 +609,13 @@ var _ = Describe("Converter", func() {
 
 		convertedDomainarm64 = fmt.Sprintf(convertedDomainarm64, memBalloonWithModelAndPeriod("virtio-non-transitional", 10))
 
+		var convertedDomainriscv64 = strings.TrimSpace(embedDomainTemplateRISCV64)
+		var convertedDomainriscv64With5Period = fmt.Sprintf(convertedDomainriscv64, memBalloonWithModelAndPeriod("virtio-non-transitional", 5))
+		var convertedDomainriscv64With0Period = fmt.Sprintf(convertedDomainriscv64, memBalloonWithModelAndPeriod("virtio-non-transitional", 0))
+		var convertedDomainriscv64WithFalseAutoattach = fmt.Sprintf(convertedDomainriscv64, memBalloonWithModelAndPeriod("none", 0))
+
+		convertedDomainriscv64 = fmt.Sprintf(convertedDomainriscv64, memBalloonWithModelAndPeriod("virtio-non-transitional", 10))
+
 		var convertedDomains390x = strings.TrimSpace(embedDomainTemplateS390X)
 		var convertedDomains390xWith5Period = fmt.Sprintf(convertedDomains390x, memBalloonWithModelAndPeriod("virtio", 5))
 		var convertedDomains390xWith0Period = fmt.Sprintf(convertedDomains390x, memBalloonWithModelAndPeriod("virtio", 0))
@@ -654,6 +668,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("on amd64 with success", amd64),
 			Entry("on arm64 with success", arm64),
+			Entry("on riscv64 with success", riscv64),
 			//TODO add s390x entry with custom check of model used (disks/interfaces/controllers/devices will use different models)
 		)
 
@@ -679,9 +694,11 @@ var _ = Describe("Converter", func() {
 			},
 				Entry("appear if enabled for amd64", true, "scsi", "virtio-non-transitional", amd64),
 				Entry("appear if enabled for arm64", true, "scsi", "virtio-non-transitional", arm64),
+				Entry("appear if enabled for riscv64", true, "scsi", "virtio-non-transitional", riscv64),
 				Entry("appear if enabled for s390x", true, "scsi", "virtio-scsi", s390x),
 				Entry("NOT appear if disabled for amd64", false, "virtio-serial", "virtio-non-transitional", amd64),
 				Entry("NOT appear if disabled for arm64", false, "virtio-serial", "virtio-non-transitional", arm64),
+				Entry("NOT appear if disabled for riscv64", false, "virtio-serial", "virtio-non-transitional", riscv64),
 				Entry("NOT appear if disabled for s390x", false, "virtio-serial", "virtio", s390x),
 			)
 		})
@@ -707,6 +724,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("for amd64", amd64, convertedDomain),
 			Entry("for arm64", arm64, convertedDomainarm64),
+			Entry("for riscv64", riscv64, convertedDomainriscv64),
 			Entry("for s390x", s390x, convertedDomains390x),
 		)
 
@@ -720,9 +738,11 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("when context define 5 period on memballoon device for amd64", amd64, convertedDomainWith5Period, uint(5)),
 			Entry("when context define 5 period on memballoon device for arm64", arm64, convertedDomainarm64With5Period, uint(5)),
+			Entry("when context define 5 period on memballoon device for riscv64", riscv64, convertedDomainriscv64With5Period, uint(5)),
 			Entry("when context define 5 period on memballoon device for s390x", s390x, convertedDomains390xWith5Period, uint(5)),
 			Entry("when context define 0 period on memballoon device for amd64 ", amd64, convertedDomainWith0Period, uint(0)),
 			Entry("when context define 0 period on memballoon device for arm64", arm64, convertedDomainarm64With0Period, uint(0)),
+			Entry("when context define 0 period on memballoon device for riscv64", riscv64, convertedDomainriscv64With0Period, uint(0)),
 			Entry("when context define 0 period on memballoon device for s390x", s390x, convertedDomains390xWith0Period, uint(0)),
 		)
 
@@ -736,6 +756,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("when Autoattach memballoon device is false for amd64", amd64, convertedDomainWithFalseAutoattach),
 			Entry("when Autoattach memballoon device is false for arm64", arm64, convertedDomainarm64WithFalseAutoattach),
+			Entry("when Autoattach memballoon device is false for riscv64", riscv64, convertedDomainriscv64WithFalseAutoattach),
 			Entry("when Autoattach memballoon device is false for s390x", s390x, convertedDomains390xWithFalseAutoattach),
 		)
 
@@ -928,6 +949,24 @@ var _ = Describe("Converter", func() {
 				Expect(domainSpec.VCPUs).To(BeNil(), "Expecting topology for hotplug")
 			})
 
+			It("should not define hotplugable topology for riscv64", func() {
+				v1.SetObjectDefaults_VirtualMachineInstance(vmi)
+				vmi.Spec.Architecture = riscv64
+				vmi.Spec.Domain.Machine = &v1.Machine{Type: "virt"}
+				vmi.Spec.Domain.CPU = &v1.CPU{
+					Cores:      2,
+					MaxSockets: 3,
+					Sockets:    2,
+				}
+				c.Architecture = archconverter.NewConverter(riscv64)
+				domainSpec := vmiToDomainXMLToDomainSpec(vmi, c)
+				Expect(domainSpec.CPU.Topology.Cores).To(Equal(uint32(2)), "Expect cores")
+				Expect(domainSpec.CPU.Topology.Sockets).To(Equal(uint32(2)), "Expect sockets")
+				Expect(domainSpec.CPU.Topology.Threads).To(Equal(uint32(1)), "Expect threads")
+				Expect(domainSpec.VCPU.CPUs).To(Equal(uint32(4)), "Expect vcpus")
+				Expect(domainSpec.VCPUs).To(BeNil(), "Expecting topology for hotplug")
+			})
+
 			DescribeTable("should convert CPU model", func(model string) {
 				v1.SetObjectDefaults_VirtualMachineInstance(vmi)
 				vmi.Spec.Domain.CPU = &v1.CPU{
@@ -974,6 +1013,7 @@ var _ = Describe("Converter", func() {
 			Entry("should be nil for s390x", s390x, BeNil()),
 			Entry("should be present for amd64", amd64, HaveExactElements(api.CPUFeature{Name: "mpx", Policy: "disable"})),
 			Entry("should be nil for arm64", arm64, BeNil()),
+			Entry("should be nil for riscv64", riscv64, BeNil()),
 		)
 
 		Context("when downwardMetrics are exposed via virtio-serial", func() {
@@ -1255,6 +1295,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("on amd64", amd64, "virtio-non-transitional"),
 			Entry("on arm64", arm64, "virtio-non-transitional"),
+			Entry("on riscv64", riscv64, "virtio-non-transitional"),
 			Entry("on s390x", s390x, "virtio-scsi"),
 		)
 
@@ -1276,6 +1317,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("on amd64", amd64, "virtio-non-transitional"),
 			Entry("on arm64", arm64, "virtio-non-transitional"),
+			Entry("on riscv64", riscv64, "virtio-non-transitional"),
 			Entry("on s390x", s390x, "virtio-scsi"),
 		)
 
@@ -1309,6 +1351,8 @@ var _ = Describe("Converter", func() {
 			Entry("should not be disabled on amd64 when device with no bus is present", amd64, "", BeFalse()),
 			Entry("should not be disabled on arm64 usb device is present", arm64, "usb", BeFalse()),
 			Entry("should not be disabled on arm64 when device with no bus is present", arm64, "", BeFalse()),
+			Entry("should not be disabled on riscv64 usb device is present", riscv64, "usb", BeFalse()),
+			Entry("should not be disabled on riscv64 when device with no bus is present", riscv64, "", BeFalse()),
 			Entry("should be disabled on s390x when usb device is present", s390x, "usb", BeTrue()),
 			Entry("should be disabled on s390x when device with no bus is present", s390x, "", BeTrue()),
 		)
@@ -1345,6 +1389,9 @@ var _ = Describe("Converter", func() {
 			Entry("not be set on arm64 when annotation was set to true", arm64, "true", false),
 			Entry("not be set on arm64 when annotation was not set", arm64, "", false),
 			Entry("not be set on arm64 when annotation was set not to true", arm64, "something", false),
+			Entry("not be set on riscv64 when annotation was set to true", riscv64, "true", false),
+			Entry("not be set on riscv64 when annotation was not set", riscv64, "", false),
+			Entry("not be set on riscv64 when annotation was set not to true", riscv64, "something", false),
 			Entry("not be set on s390x when annotation was set to true", s390x, "true", false),
 			Entry("not be set on s390x when annotation was not set", s390x, "", false),
 			Entry("not be set on s390x when annotation was set not to true", s390x, "something", false),
@@ -1447,6 +1494,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("should be enabled on amd64 when number of USB client devices > 0", amd64, "qemu-xhci"),
 			Entry("should be enabled on arm64 ", arm64, "qemu-xhci"),
+			Entry("should be enabled on riscv64 ", riscv64, "qemu-xhci"),
 			Entry("should be disabled on s390x", s390x, "none"),
 		)
 
@@ -1479,6 +1527,7 @@ var _ = Describe("Converter", func() {
 		},
 			Entry("on amd64", amd64, &api.Rom{Enabled: "no"}),
 			Entry("on arm64", arm64, &api.Rom{Enabled: "no"}),
+			Entry("on riscv64", riscv64, &api.Rom{Enabled: "no"}),
 			Entry("on s390x", s390x, nil),
 		)
 
@@ -1677,7 +1726,7 @@ var _ = Describe("Converter", func() {
 			switch arch {
 			case amd64:
 				Expect(domain.Spec.Features.VMPort.State).To(Equal("off"))
-			case arm64, s390x:
+			case arm64, s390x, riscv64:
 				Expect(domain.Spec.Features.VMPort).To(BeNil())
 			}
 		},
@@ -1973,6 +2022,10 @@ var _ = Describe("Converter", func() {
 					Expect(domain.Spec.Devices.Video[0].Model.Type).To(Equal("vga"))
 					Expect(domain.Spec.Devices.Inputs).To(BeEmpty())
 				case arm64:
+					Expect(domain.Spec.Devices.Video[0].Model.Type).To(Equal(v1.VirtIO))
+					Expect(domain.Spec.Devices.Inputs[0].Type).To(Equal(v1.InputTypeTablet))
+					Expect(domain.Spec.Devices.Inputs[1].Type).To(Equal(v1.InputTypeKeyboard))
+				case riscv64:
 					Expect(domain.Spec.Devices.Video[0].Model.Type).To(Equal(v1.VirtIO))
 					Expect(domain.Spec.Devices.Inputs[0].Type).To(Equal(v1.InputTypeTablet))
 					Expect(domain.Spec.Devices.Inputs[1].Type).To(Equal(v1.InputTypeKeyboard))
@@ -3167,6 +3220,11 @@ var _ = Describe("Converter", func() {
 			Entry("VIRTIO on amd64 with EFI and BochsDisplayForEFIGuests unset", arm64, v1.Bootloader{EFI: &v1.EFI{}}, false, "virtio"),
 			Entry("VIRTIO on amd64 with EFI and BochsDisplayForEFIGuests set", arm64, v1.Bootloader{EFI: &v1.EFI{}}, true, "virtio"),
 
+			Entry("VIRTIO on riscv64 with BIOS and BochsDisplayForEFIGuests unset", riscv64, v1.Bootloader{BIOS: &v1.BIOS{}}, false, "virtio"),
+			Entry("VIRTIO on riscv64 with BIOS and BochsDisplayForEFIGuests set", riscv64, v1.Bootloader{BIOS: &v1.BIOS{}}, true, "virtio"),
+			Entry("VIRTIO on riscv64 with EFI and BochsDisplayForEFIGuests unset", riscv64, v1.Bootloader{EFI: &v1.EFI{}}, false, "virtio"),
+			Entry("VIRTIO on riscv64 with EFI and BochsDisplayForEFIGuests set", riscv64, v1.Bootloader{EFI: &v1.EFI{}}, true, "virtio"),
+
 			Entry("VIRTIO on s390x with BIOS and BochsDisplayForEFIGuests unset", s390x, v1.Bootloader{BIOS: &v1.BIOS{}}, false, "virtio"),
 			Entry("VIRTIO on s390x with BIOS and BochsDisplayForEFIGuests set", s390x, v1.Bootloader{BIOS: &v1.BIOS{}}, true, "virtio"),
 			Entry("VIRTIO on s390x with EFI and BochsDisplayForEFIGuests unset", s390x, v1.Bootloader{EFI: &v1.EFI{}}, false, "virtio"),
@@ -3380,6 +3438,7 @@ var _ = Describe("Converter", func() {
 			},
 				Entry("on amd64", amd64, "virtio-non-transitional"),
 				Entry("on arm64", arm64, "virtio-non-transitional"),
+				Entry("on riscv64", riscv64, "virtio-non-transitional"),
 				Entry("on s390x", s390x, "virtio-scsi"),
 			)
 
@@ -4201,6 +4260,11 @@ func vmiArchMutate(arch string, vmi *v1.VirtualMachineInstance, c *ConverterCont
 		}
 	case amd64:
 		defaults.SetAmd64Defaults(&vmi.Spec)
+	case riscv64:
+		defaults.SetRISCV64Defaults(&vmi.Spec)
+		c.EFIConfiguration = &EFIConfiguration{
+			SecureLoader: false,
+		}
 	case s390x:
 		defaults.SetS390xDefaults(&vmi.Spec)
 	}

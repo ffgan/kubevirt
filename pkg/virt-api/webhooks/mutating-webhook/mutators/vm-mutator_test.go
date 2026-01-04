@@ -182,18 +182,20 @@ var _ = Describe("VirtualMachine Mutator", func() {
 		Expect(vmSpec.Template.Spec.Domain.Firmware.Serial).ToNot(BeNil())
 	},
 		Entry("arm64", "arm64", "virt"),
+		Entry("riscv64", "riscv64", "virt"),
 		Entry("s390x", "s390x", "s390-ccw-virtio"),
 		Entry("amd64", "amd64", "q35"),
 	)
 
-	DescribeTable("should apply configurable defaults on VM create", func(arch string, amd64MachineType string, arm64MachineType string, s390xMachineType string, result string) {
+	DescribeTable("should apply configurable defaults on VM create", func(arch string, amd64MachineType string, arm64MachineType string, riscv64MachineType string, s390xMachineType string, result string) {
 		testutils.UpdateFakeKubeVirtClusterConfig(kvStore, &v1.KubeVirt{
 			Spec: v1.KubeVirtSpec{
 				Configuration: v1.KubeVirtConfiguration{
 					ArchitectureConfiguration: &v1.ArchConfiguration{
-						Amd64: &v1.ArchSpecificConfiguration{MachineType: amd64MachineType},
-						Arm64: &v1.ArchSpecificConfiguration{MachineType: arm64MachineType},
-						S390x: &v1.ArchSpecificConfiguration{MachineType: s390xMachineType},
+						Amd64:   &v1.ArchSpecificConfiguration{MachineType: amd64MachineType},
+						Arm64:   &v1.ArchSpecificConfiguration{MachineType: arm64MachineType},
+						Riscv64: &v1.ArchSpecificConfiguration{MachineType: riscv64MachineType},
+						S390x:   &v1.ArchSpecificConfiguration{MachineType: s390xMachineType},
 					},
 				},
 			},
@@ -203,9 +205,10 @@ var _ = Describe("VirtualMachine Mutator", func() {
 		Expect(vmSpec.Template.Spec.Domain.Machine.Type).To(Equal(result))
 
 	},
-		Entry("when override is for amd64 architecture", "amd64", machineTypeFromConfig, "", "", machineTypeFromConfig),
-		Entry("when override is for arm64 architecture", "arm64", "", machineTypeFromConfig, "", machineTypeFromConfig),
-		Entry("when override is for s390x architecture", "s390x", "", "", machineTypeFromConfig, machineTypeFromConfig),
+		Entry("when override is for amd64 architecture", "amd64", machineTypeFromConfig, "", "", "", machineTypeFromConfig),
+		Entry("when override is for arm64 architecture", "arm64", "", machineTypeFromConfig, "", "", machineTypeFromConfig),
+		Entry("when override is for riscv64 architecture", "riscv64", "", "", machineTypeFromConfig, "", machineTypeFromConfig),
+		Entry("when override is for s390x architecture", "s390x", "", "", "", machineTypeFromConfig, machineTypeFromConfig),
 	)
 
 	It("should not override default architecture with defaults on VM create", func() {
@@ -236,6 +239,7 @@ var _ = Describe("VirtualMachine Mutator", func() {
 		Entry("amd64", "amd64"),
 		Entry("s390x", "s390x"),
 		Entry("arm64", "arm64"),
+		Entry("riscv64", "riscv64"),
 	)
 
 	DescribeTable("should not override user specified MachineType with PreferredMachineType or cluster config on VM create", func(arch string) {
@@ -276,6 +280,7 @@ var _ = Describe("VirtualMachine Mutator", func() {
 		Entry("amd64", "amd64"),
 		Entry("s390x", "s390x"),
 		Entry("arm64", "arm64"),
+		Entry("riscv64", "riscv64"),
 	)
 
 	DescribeTable("should use PreferredMachineType over cluster config on VM create", func(arch string) {
@@ -315,6 +320,7 @@ var _ = Describe("VirtualMachine Mutator", func() {
 		Entry("amd64", "amd64"),
 		Entry("s390x", "s390x"),
 		Entry("arm64", "arm64"),
+		Entry("riscv64", "riscv64"),
 	)
 
 	DescribeTable("should ignore error looking up preference and apply cluster config on VM create", func(arch string) {
@@ -327,9 +333,10 @@ var _ = Describe("VirtualMachine Mutator", func() {
 			Spec: v1.KubeVirtSpec{
 				Configuration: v1.KubeVirtConfiguration{
 					ArchitectureConfiguration: &v1.ArchConfiguration{
-						Amd64: &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
-						Arm64: &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
-						S390x: &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
+						Amd64:   &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
+						Arm64:   &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
+						Riscv64: &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
+						S390x:   &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
 					},
 				},
 			},
@@ -340,6 +347,7 @@ var _ = Describe("VirtualMachine Mutator", func() {
 	},
 		Entry("amd64", "amd64"),
 		Entry("arm64", "arm64"),
+		Entry("riscv64", "riscv64"),
 		Entry("s390x", "s390x"),
 	)
 
@@ -371,6 +379,7 @@ var _ = Describe("VirtualMachine Mutator", func() {
 		Entry("amd64", "amd64"),
 		Entry("s390x", "s390x"),
 		Entry("arm64", "arm64"),
+		Entry("riscv64", "riscv64"),
 	)
 
 	DescribeTable("should admit valid values to InferFromVolumePolicy", func(instancetypeMatcher *v1.InstancetypeMatcher, preferenceMatcher *v1.PreferenceMatcher) {

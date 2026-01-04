@@ -6,6 +6,7 @@ go_library(
         "amd64.go",
         "arm64.go",
         "converter.go",
+        "riscv64.go",
         "s390x.go",
     ],
     importpath = "kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/converter/arch",

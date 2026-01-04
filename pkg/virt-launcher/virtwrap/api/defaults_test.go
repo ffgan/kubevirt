@@ -13,6 +13,7 @@ var _ = ginkgo.Describe("ArchSpecificDefaults", func() {
 		Expect(domain.Spec.OS.Type.Arch).To(Equal(targetArch))
 	},
 		ginkgo.Entry("to arm64", "arm64", "aarch64"),
+		ginkgo.Entry("to riscv64", "riscv64", "riscv64"),
 		ginkgo.Entry("to x86_64", "amd64", "x86_64"),
 	)
 
@@ -22,6 +23,7 @@ var _ = ginkgo.Describe("ArchSpecificDefaults", func() {
 		Expect(domain.Spec.OS.Type.Machine).To(Equal(machineType))
 	},
 		ginkgo.Entry("to arm64", "arm64", "virt"),
+		ginkgo.Entry("to riscv64", "riscv64", "virt"),
 		ginkgo.Entry("to q35", "amd64", "q35"),
 	)
 
@@ -32,6 +34,7 @@ var _ = ginkgo.Describe("ArchSpecificDefaults", func() {
 		Expect(domain.Spec.Type).To(Equal("kvm"))
 	},
 		ginkgo.Entry("to virt", "arm64"),
+		ginkgo.Entry("to virt", "riscv64"),
 		ginkgo.Entry("to q35", "amd64"),
 	)
 })

@@ -105,7 +105,7 @@ func NewGuestless(opts ...libvmi.Option) *kvirtv1.VirtualMachineInstance {
 }
 
 func qemuMinimumMemory() string {
-	if isARM64() {
+	if isARM64() || isRISCV64() {
 		// required to start qemu on ARM with UEFI firmware
 		// https://github.com/kubevirt/kubevirt/pull/11366#issuecomment-1970247448
 		const armMinimalBootableMemory = "128Mi"
@@ -115,7 +115,7 @@ func qemuMinimumMemory() string {
 }
 
 func cirrosMemory() string {
-	if isARM64() {
+	if isARM64() || isRISCV64() {
 		return "256Mi"
 	}
 	return "128Mi"

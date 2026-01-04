@@ -63,6 +63,11 @@ case ${ARCHITECTURE} in
         $other_images_x86_64_aarch64
     "
     ;;
+"riscv64" | "crossbuild-riscv64")
+    other_images="
+        $other_images_default
+    "
+    ;;
 *)
     other_images="
         $other_images_default

@@ -688,6 +688,19 @@ var _ = Describe("GetMemoryOverhead calculation", func() {
 		})
 	})
 
+	When("the cpu arch is riscv64", func() {
+		It("should add riscv64 overhead", func() {
+			expected := resource.NewScaledQuantity(0, resource.Kilo)
+			expected.Add(*baseOverhead)
+			expected.Add(*staticOverhead)
+			expected.Add(*videoRAMOverhead)
+			expected.Add(*coresOverhead)
+			expected.Add(*cpuArchOverhead)
+			overhead := GetMemoryOverhead(vmi, "riscv64", nil)
+			Expect(overhead.Value()).To(BeEquivalentTo(expected.Value()))
+		})
+	})
+
 	When("the vmi requests a VFIO device", func() {
 		DescribeTable("should add vfio overhead", func(devices v1.Devices) {
 			vmi.Spec.Domain.Devices = devices

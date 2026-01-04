@@ -522,6 +522,7 @@ var _ = Describe("Template", func() {
 			},
 				Entry("on amd64", "amd64", "/usr/share/OVMF"),
 				Entry("on arm64", "arm64", "/usr/share/AAVMF"),
+				Entry("on riscv64", "riscv64", "/usr/share/OVMF"),
 			)
 
 			It("Should have a stable label to select virt-launcher pods", func() {
@@ -1119,6 +1120,7 @@ var _ = Describe("Template", func() {
 			},
 				Entry("on amd64", "amd64", "/usr/share/OVMF"),
 				Entry("on arm64", "arm64", "/usr/share/AAVMF"),
+				Entry("on riscv64", "riscv64", "/usr/share/OVMF"),
 			)
 
 			It("should add node selector for node discovery feature to template", func() {
@@ -2044,6 +2046,7 @@ var _ = Describe("Template", func() {
 			},
 				Entry("on amd64", "amd64", "1282971493", "2282971493"),
 				Entry("on arm64", "arm64", "1417189221", "2417189221"),
+				Entry("on riscv64", "riscv64", "1417189221", "2417189221"),
 			)
 			DescribeTable("should overcommit guest overhead if selected, by only adding the overhead to memory limits", func(arch string, limitMemory string) {
 				config, kvStore, svc = configFactory(arch)
@@ -2081,6 +2084,7 @@ var _ = Describe("Template", func() {
 			},
 				Entry("on amd64", "amd64", "2282971493"),
 				Entry("on arm64", "arm64", "2417189221"),
+				Entry("on riscv64", "riscv64", "2417189221"),
 			)
 			DescribeTable("should not add unset resources", func(arch string, requestMemory int) {
 				config, kvStore, svc = configFactory(arch)
@@ -2120,6 +2124,7 @@ var _ = Describe("Template", func() {
 			},
 				Entry("on amd64", "amd64", 362),
 				Entry("on arm64", "arm64", 497),
+				Entry("on riscv64", "riscv64", 497),
 			)
 
 			DescribeTable("should check autoattachGraphicsDevicse", func(arch string, autoAttach *bool, memory int) {
@@ -2161,6 +2166,9 @@ var _ = Describe("Template", func() {
 				Entry("and consider graphics overhead if it is not set on arm64", "arm64", nil, 497),
 				Entry("and consider graphics overhead if it is set to true on arm64", "arm64", pointer.P(true), 497),
 				Entry("and not consider graphics overhead if it is set to false on arm64", "arm64", pointer.P(false), 463),
+				Entry("and consider graphics overhead if it is not set on riscv64", "riscv64", nil, 497),
+				Entry("and consider graphics overhead if it is set to true on riscv64", "riscv64", pointer.P(true), 497),
+				Entry("and not consider graphics overhead if it is set to false on riscv64", "riscv64", pointer.P(false), 463),
 			)
 			It("should calculate vcpus overhead based on guest toplogy", func() {
 				config, kvStore, svc = configFactory(defaultArch)
@@ -2473,6 +2481,8 @@ var _ = Describe("Template", func() {
 				Entry("hugepages-1Gi on amd64", "amd64", "1Gi", 282),
 				Entry("hugepages-2Mi on arm64", "arm64", "2Mi", 416),
 				Entry("hugepages-1Gi on arm64", "arm64", "1Gi", 416),
+				Entry("hugepages-2Mi on riscv64", "riscv64", "2Mi", 416),
+				Entry("hugepages-1Gi on riscv64", "riscv64", "1Gi", 416),
 			)
 			DescribeTable("should account for difference between guest and container requested memory ", func(arch string, memorySize int) {
 				config, kvStore, svc = configFactory(arch)
@@ -2550,6 +2560,7 @@ var _ = Describe("Template", func() {
 			},
 				Entry("on amd64", "amd64", 282),
 				Entry("on arm64", "arm64", 416),
+				Entry("on riscv64", "riscv64", 416),
 			)
 		})
 

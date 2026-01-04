@@ -19,7 +19,14 @@
 
 set -e
 
-INTEG_TEST_IMAGE=${INTEG_TEST_IMAGE:-"quay.io/kubevirt/builder:2306271234-e00d9fcf9"}
+if [[ ! -v INTEG_TEST_IMAGE && "$(uname -m)" == "riscv64" ]]; then
+    # TODO： 更新该镜像
+    INTEG_TEST_IMAGE="registry.risc-vers.cn/wg-cloudcomputing/kubevirt-builder:2511241729-dec2edeb7-riscv64"
+fi
+
+INTEG_TEST_IMAGE=${INTEG_TEST_IMAGE:-"quay.io/kubevirt/builder:2410110922-18d7a3186d"}
+
+# INTEG_TEST_IMAGE=${INTEG_TEST_IMAGE:-"quay.io/kubevirt/builder:2306271234-e00d9fcf9"}
 PODMAN_SOCKET=${PODMAN_SOCKET:-"/run/podman/podman.sock"}
 
 detect_podman_socket() {

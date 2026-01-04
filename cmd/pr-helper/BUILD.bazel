@@ -31,6 +31,12 @@ oci_image(
             "//rpm:pr-helper_aarch64",
             ":get-version",
         ],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": [
+            ":multipath",
+            ":entrypoint",
+            "//rpm:pr-helper_riscv64",
+            ":get-version",
+        ],
         "//conditions:default": [
             ":multipath",
             ":entrypoint",

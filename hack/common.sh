@@ -54,15 +54,26 @@ KUBEVIRT_CRI="$(determine_cri_bin)"
 
 function build_func_tests_image() {
     local bin_name=tests
-    cp ${KUBEVIRT_DIR}/tests/{Dockerfile,entrypoint.sh} \
+    cp ${KUBEVIRT_DIR}/tests/{Dockerfile,entrypoint.sh,Dockerfile.riscv64} \
         ${KUBEVIRT_DIR}/tools/manifest-templator/manifest-templator \
         ${TESTS_OUT_DIR}/
     rsync -ar ${KUBEVIRT_DIR}/manifests/ ${TESTS_OUT_DIR}/manifests
     cd ${TESTS_OUT_DIR}
-    ${KUBEVIRT_CRI} build \
-        -t ${docker_prefix}/${bin_name}:${docker_tag} \
-        --label ${job_prefix} \
-        --label ${bin_name} .
+    # ${KUBEVIRT_CRI} build \
+    #     -t ${docker_prefix}/${bin_name}:${docker_tag} \
+    #     --label ${job_prefix} \
+    #     --label ${bin_name} .
+    if [[ "$(uname -m)" == "riscv64" ]]; then
+        ${KUBEVIRT_CRI} build \
+            -t ${docker_prefix}/${bin_name}:${docker_tag} \
+            --label ${job_prefix} \
+            --label ${bin_name} -f Dockerfile.riscv64 .
+    else
+        ${KUBEVIRT_CRI} build \
+            -t ${docker_prefix}/${bin_name}:${docker_tag} \
+            --label ${job_prefix} \
+            --label ${bin_name} .
+    fi
 }
 
 # Use this environment variable to set a custom pkgdir path
@@ -141,8 +152,17 @@ function format_archname() {
             fi
             echo ${arch}
             ;;
+        crossbuild-riscv64 | riscv64)
+            [[ $tag ]] && echo "riscv64" && return
+            if [ ${local_platform} != "riscv64" ]; then
+                arch="crossbuild-riscv64"
+            else
+                arch="riscv64"
+            fi
+            echo ${arch}
+            ;;
         *)
-            echo "ERROR: invalid Arch, ${platform}, only support x86_64, aarch64 and s390x"
+            echo "ERROR: invalid Arch, ${platform}, only support x86_64, aarch64, riscv64 and s390x"
             exit 1
             ;;
         esac
