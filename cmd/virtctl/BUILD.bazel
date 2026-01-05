@@ -28,6 +28,8 @@ go_binary(
     x_defs = version_x_defs(),
 )
 
+# please check rules_go PR https://github.com/bazel-contrib/rules_go/pull/4439 
+# 在我们完成配置mac和windows的工具链之前，这里还是先注释掉，否则会无法在linux+x86下通过Analysis
 # go_binary(
 #     name = "virtctl-darwin",
 #     embed = [":go_default_library"],

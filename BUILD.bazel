@@ -121,7 +121,7 @@ genrule(
     srcs = [],
     outs = [".version"],
     cmd = "grep ^STABLE_BUILD_SCM_REVISION bazel-out/stable-status.txt | cut -d' ' -f2 >$@",
-    stamp = 1,
+    stamp = True,
     visibility = ["//visibility:public"],
 )
 
@@ -139,7 +139,7 @@ cc_library(
         "@io_bazel_rules_go//go/platform:linux_riscv64": ["//rpm:libvirt-libs_riscv64/usr/include/libvirt"],
         "//conditions:default": ["//rpm:libvirt-libs_x86_64/usr/include/libvirt"],
     }),
-    linkstatic = 1,
+    linkstatic = True,
     strip_include_prefix = select({
         "@io_bazel_rules_go//go/platform:linux_arm64": "/rpm/libvirt-libs_aarch64/usr/include/",
         "@io_bazel_rules_go//go/platform:linux_s390x": "/rpm/libvirt-libs_s390x/usr/include/",
@@ -460,7 +460,7 @@ genrule(
     ],
     outs = ["ginkgo-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -470,7 +470,7 @@ genrule(
     ],
     outs = ["manifest-templator-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -480,7 +480,7 @@ genrule(
     ],
     outs = ["perfscale-audit-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -490,7 +490,7 @@ genrule(
     ],
     outs = ["perfscale-load-generator-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -500,7 +500,7 @@ genrule(
     ],
     outs = ["cluster-profiler-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -510,7 +510,7 @@ genrule(
     ],
     outs = ["junit-merger-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -521,7 +521,7 @@ genrule(
     ],
     outs = ["functests-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -532,7 +532,7 @@ genrule(
     ],
     outs = ["example-guest-agent-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -542,7 +542,7 @@ genrule(
     ],
     outs = ["dump-copier"],
     cmd = "echo '#!/bin/sh\n\ncp -f $(SRCS) $$1' > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 filegroup(
@@ -557,7 +557,7 @@ genrule(
     ],
     outs = ["bazel-goveralls"],
     cmd = "echo '#!/bin/sh\n\necho $(SRCS) | hack/goveralls.sh'  > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 genrule(
@@ -567,7 +567,7 @@ genrule(
     ],
     outs = ["bazel-coverage-report"],
     cmd = "echo '#!/bin/sh\n\necho $(SRCS) | hack/coverage-report.sh'  > \"$@\"",
-    executable = 1,
+    executable = True,
 )
 
 go_library(

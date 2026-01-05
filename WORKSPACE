@@ -68,6 +68,8 @@ http_archive(
     ],
 )
 
+# https://github.com/bazel-contrib/rules_go/pull/4439 
+# 这个PR使得rules_go在0.58版本中，kubevirt会出现CC toolchain的问题
 http_archive(
     name = "io_bazel_rules_go",
     sha256 = "68af54cb97fbdee5e5e8fe8d210d15a518f9d62abfd71620c3eaff3b26a5ff86",
