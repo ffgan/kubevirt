@@ -129,7 +129,7 @@ COPY entrypoint.sh /entrypoint.sh
 COPY create_bazel_cache_rcs.sh /create_bazel_cache_rcs.sh
 
 RUN if test "${ARCH}" = "riscv64"; then \
-       wget https://code.openruyi.cn/-/project/10983/uploads/da2017947ef311033b31fdff49d3fcbc/bazel-5.4.1-linux-riscv64.tar.gz && \
+       wget https://code.openruyi.cn/-/project/10983/uploads/51ef2fdff61860d3571c3a1d8188880c/bazel-6.5.0-linux-riscv64.tar.gz && \
        tar -xzf bazel-${BAZEL_VERSION}-linux-${BAZEL_ARCH}.tar.gz && \
        cp bazel-${BAZEL_VERSION}-${BAZEL_ARCH}/bin/bazel-${BAZEL_VERSION}-${BAZEL_ARCH} /usr/bin/bazel && \
        chmod u+x -R /usr/bin/bazel; \
