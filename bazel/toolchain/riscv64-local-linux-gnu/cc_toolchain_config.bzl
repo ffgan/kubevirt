@@ -101,7 +101,7 @@ def _impl(ctx):
                 flag_groups = ([
                     flag_group(
                         flags = [
-                            "-lstdc",
+                            "-lstdc++",
                         ],
                     ),
                 ]),
