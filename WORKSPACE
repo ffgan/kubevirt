@@ -229,12 +229,9 @@ http_file(
 # TODO: wait for bazeldnf release new version,to gain rv64 support
 http_archive(
     name = "bazeldnf",
-    sha256 = "0a4b9740da1839ded674c8f5012c069b235b101f1eaa2552a4721287808541af",
-    strip_prefix = "bazeldnf-v0.5.9-2",
-    urls = [
-        "https://github.com/brianmcarey/bazeldnf/releases/download/v0.5.9-2/bazeldnf-v0.5.9-2.tar.gz",
-        "https://storage.googleapis.com/builddeps/0a4b9740da1839ded674c8f5012c069b235b101f1eaa2552a4721287808541af",
-    ],
+    sha256 = "931ef2d82796be74573049615f92c9413d8838082e03df0252dac2fb4e79e9eb",
+    strip_prefix = "bazeldnf-v0.5.9-3",
+    url = "https://github.com/ffgan/bazeldnf/releases/download/v0.5.9-3/bazeldnf-v0.5.9-3.tar.gz",
 )
 
 load("@bazeldnf//bazeldnf:defs.bzl", "rpm")
