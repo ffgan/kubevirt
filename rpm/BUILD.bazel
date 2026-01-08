@@ -62,6 +62,7 @@ bazeldnf(
     name = "ldd_riscv64",
     command = "ldd",
     libs = [
+        "/usr/lib64/libvirt-admin.so.0",
         "/usr/lib64/libvirt-lxc.so.0",
         "/usr/lib64/libvirt-qemu.so.0",
         "/usr/lib64/libvirt.so.0",
@@ -326,6 +327,8 @@ tar2files(
             "libtirpc.so.3.0.0",
             "libunistring.so.5",
             "libunistring.so.5.0.0",
+            "libvirt-admin.so.0",
+            "libvirt-admin.so.0.9010.0",
             "libvirt-lxc.so.0",
             "libvirt-lxc.so.0.9010.0",
             "libvirt-qemu.so.0",
