@@ -43,7 +43,6 @@ go_test(
         "smbios_test.go",
     ],
     embed = [":go_default_library"],
-    race = "on",
     deps = [
         "//pkg/hooks/v1alpha1:go_default_library",
         "//pkg/virt-launcher/virtwrap/api:go_default_library",
