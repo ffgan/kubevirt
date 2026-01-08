@@ -20,8 +20,7 @@
 set -e
 
 if [[ ! -v INTEG_TEST_IMAGE && "$(uname -m)" == "riscv64" ]]; then
-    # TODO： 更新该镜像
-    INTEG_TEST_IMAGE="registry.risc-vers.cn/wg-cloudcomputing/kubevirt-builder:2511241729-dec2edeb7-riscv64"
+    INTEG_TEST_IMAGE="registry.risc-vers.cn/wg-cloudcomputing/kubevirt-builder:2601082230-a023c1e20f-riscv64"
 fi
 
 INTEG_TEST_IMAGE=${INTEG_TEST_IMAGE:-"quay.io/kubevirt/builder:2410110922-18d7a3186d"}
