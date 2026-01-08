@@ -18,8 +18,7 @@ kubevirt_cross_compile_image="quay.io/kubevirt/builder-cross:${kubevirt_builder_
 
 # riscv64 native build
 if [[ ! -v KUBEVIRT_BUILDER_IMAGE && "$(uname -m)" == "riscv64" ]]; then
-    # TODO: 更新该镜像
-    KUBEVIRT_BUILDER_IMAGE="registry.risc-vers.cn/wg-cloudcomputing/kubevirt-builder:2511281012-da889be13-riscv64"
+    KUBEVIRT_BUILDER_IMAGE="registry.risc-vers.cn/wg-cloudcomputing/kubevirt-builder:2601082230-a023c1e20f-riscv64"
 fi
 
 KUBEVIRT_BUILDER_IMAGE=${KUBEVIRT_BUILDER_IMAGE:-"${default_kubevirt_builder_image}"}
