@@ -36,7 +36,6 @@ go_test(
         "dra_test.go",
     ],
     embed = [":go_default_library"],
-    race = "on",
     deps = [
         "//pkg/dra:go_default_library",
         "//pkg/testutils:go_default_library",

@@ -20,7 +20,6 @@ go_test(
         "scp_suite_test.go",
         "scp_test.go",
     ],
-    race = "on",
     deps = [
         ":go_default_library",
         "//pkg/virtctl/ssh:go_default_library",

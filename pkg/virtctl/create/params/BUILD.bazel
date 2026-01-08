@@ -17,7 +17,6 @@ go_test(
         "params_suite_test.go",
         "params_test.go",
     ],
-    race = "on",
     deps = [
         ":go_default_library",
         "//pkg/pointer:go_default_library",

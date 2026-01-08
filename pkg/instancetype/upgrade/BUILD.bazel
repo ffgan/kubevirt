@@ -27,7 +27,6 @@ go_test(
         "upgrade_suite_test.go",
         "upgrade_test.go",
     ],
-    race = "on",
     deps = [
         ":go_default_library",
         "//pkg/instancetype/revision:go_default_library",

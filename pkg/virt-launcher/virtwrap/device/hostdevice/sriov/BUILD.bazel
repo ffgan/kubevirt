@@ -28,7 +28,6 @@ go_test(
         "pcipool_netstatus_test.go",
         "sriov_suite_test.go",
     ],
-    race = "on",
     deps = [
         ":go_default_library",
         "//pkg/network/deviceinfo:go_default_library",
