@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_cross_binary", "go_library")
 load("//staging/src/kubevirt.io/client-go/version:def.bzl", "version_x_defs")
 
 go_library(
@@ -19,67 +19,53 @@ go_binary(
     x_defs = version_x_defs(),
 )
 
-go_binary(
-    name = "virtctl-amd64",
-    embed = [":go_default_library"],
-    goarch = "amd64",
-    goos = "linux",
-    visibility = ["//visibility:public"],
-    x_defs = version_x_defs(),
-)
-
 # please check rules_go PR https://github.com/bazel-contrib/rules_go/pull/4439
 # 在我们完成配置mac和windows的工具链之前，这里还是先注释掉，否则会无法在linux+x86下通过Analysis
-# go_binary(
+# go_cross_binary(
 #     name = "virtctl-darwin",
-#     embed = [":go_default_library"],
-#     goarch = "amd64",
-#     goos = "darwin",
+#     platform = "@io_bazel_rules_go//go/toolchain:darwin_amd64",
+#     target = ":virtctl",
 #     visibility = ["//visibility:public"],
-#     x_defs = version_x_defs(),
 # )
 
-# go_binary(
-#     name = "virtctl-windows",
-#     embed = [":go_default_library"],
-#     goarch = "amd64",
-#     goos = "windows",
-#     visibility = ["//visibility:public"],
-#     x_defs = version_x_defs(),
-# )
-
-go_binary(
-    name = "virtctl-arm64",
-    embed = [":go_default_library"],
-    goarch = "arm64",
-    goos = "linux",
-    visibility = ["//visibility:public"],
-    x_defs = version_x_defs(),
-)
-
-go_binary(
-    name = "virtctl-riscv64",
-    embed = [":go_default_library"],
-    goarch = "riscv64",
-    goos = "linux",
-    visibility = ["//visibility:public"],
-    x_defs = version_x_defs(),
-)
-
-go_binary(
-    name = "virtctl-s390x",
-    embed = [":go_default_library"],
-    goarch = "s390x",
-    goos = "linux",
-    visibility = ["//visibility:public"],
-    x_defs = version_x_defs(),
-)
-
-# go_binary(
+# go_cross_binary(
 #     name = "virtctl-darwin-arm64",
-#     embed = [":go_default_library"],
-#     goarch = "arm64",
-#     goos = "darwin",
+#     platform = "@io_bazel_rules_go//go/toolchain:darwin_arm64",
+#     target = ":virtctl",
 #     visibility = ["//visibility:public"],
-#     x_defs = version_x_defs(),
 # )
+
+# go_cross_binary(
+#     name = "virtctl-windows",
+#     platform = "@io_bazel_rules_go//go/toolchain:windows_amd64",
+#     target = ":virtctl",
+#     visibility = ["//visibility:public"],
+# )
+
+go_cross_binary(
+    name = "virtctl-amd64",
+    platform = "@io_bazel_rules_go//go/toolchain:linux_amd64",
+    target = ":virtctl",
+    visibility = ["//visibility:public"],
+)
+
+go_cross_binary(
+    name = "virtctl-arm64",
+    platform = "@io_bazel_rules_go//go/toolchain:linux_arm64",
+    target = ":virtctl",
+    visibility = ["//visibility:public"],
+)
+
+go_cross_binary(
+    name = "virtctl-riscv64",
+    platform = "@io_bazel_rules_go//go/toolchain:linux_riscv64",
+    target = ":virtctl",
+    visibility = ["//visibility:public"],
+)
+
+go_cross_binary(
+    name = "virtctl-s390x",
+    platform = "@io_bazel_rules_go//go/toolchain:linux_s390x",
+    target = ":virtctl",
+    visibility = ["//visibility:public"],
+)
