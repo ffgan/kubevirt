@@ -662,6 +662,11 @@ func (c *Controller) handleCPUChangeRequest(vm *virtv1.VirtualMachine, vmi *virt
 		return nil
 	}
 
+	if virtconfig.IsRISCV64(vm.Spec.Template.Spec.Architecture) {
+		setRestartRequired(vm, "riscv64 doesn't support CPU hotplug")
+		return nil
+	}
+
 	if err := c.VMICPUsPatch(vmCopyWithInstancetype, vmi); err != nil {
 		log.Log.Object(vmi).Errorf("unable to patch vmi to add cpu topology status: %v", err)
 		return err

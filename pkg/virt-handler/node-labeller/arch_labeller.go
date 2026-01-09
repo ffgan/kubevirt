@@ -50,6 +50,8 @@ func newArchLabeller(arch string) archLabeller {
 		return archLabellerAMD64{}
 	case arm64:
 		return archLabellerARM64{}
+	case riscv64:
+		return archLabellerRISCV64{}
 	case s390x:
 		return archLabellerS390X{}
 	default:

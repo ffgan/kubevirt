@@ -448,6 +448,7 @@ var _ = Describe("[rfe_id:273][crit:high][vendor:cnv-qe@redhat.com][level:compon
 				},
 					Entry("amd64", "pc-q35-test-1.2.3", decorators.RequiresAMD64),
 					Entry("arm64", "virt-test-1.2.3", decorators.RequiresARM64),
+					Entry("riscv64", "virt-test-1.2.3", decorators.RequiresRISCV64),
 					Entry("s390x", "s390-ccw-virtio-test-1.2.3", decorators.RequiresS390X),
 				)
 			})
@@ -484,6 +485,7 @@ var _ = Describe("[rfe_id:273][crit:high][vendor:cnv-qe@redhat.com][level:compon
 			},
 				Entry("amd64", v1.Isa, decorators.RequiresAMD64),
 				Entry("arm64", v1.Pvpanic, decorators.RequiresARM64),
+				Entry("riscv64", v1.Pvpanic, decorators.RequiresRISCV64),
 			)
 		})
 

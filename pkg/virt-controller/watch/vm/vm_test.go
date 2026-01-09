@@ -5448,6 +5448,32 @@ var _ = Describe("VirtualMachine", func() {
 					Expect(err).NotTo(HaveOccurred())
 					Expect(vm).To(matcher.HaveConditionTrue(v1.VirtualMachineRestartRequired))
 				})
+				It("should raise RestartRequired condition for riscv64 VM", func() {
+					vm, _ := watchtesting.DefaultVirtualMachine(true)
+					vm.Spec.Template.Spec.Architecture = "riscv64"
+					vm.Spec.Template.Spec.Domain.CPU = &v1.CPU{
+						Sockets:    2,
+						MaxSockets: 4,
+					}
+
+					vmi := SetupVMIFromVM(vm)
+					vmi, err := virtFakeClient.KubevirtV1().VirtualMachineInstances(vm.Namespace).Create(context.Background(), vmi, metav1.CreateOptions{})
+					Expect(err).NotTo(HaveOccurred())
+					controller.vmiIndexer.Add(vmi)
+
+					vm.Spec.Template.Spec.Domain.CPU = &v1.CPU{
+						Sockets: 3,
+					}
+					addVirtualMachine(vm)
+					vm, err = virtFakeClient.KubevirtV1().VirtualMachines(vm.Namespace).Create(context.Background(), vm, metav1.CreateOptions{})
+					Expect(err).NotTo(HaveOccurred())
+
+					sanityExecute(vm)
+
+					vm, err = virtFakeClient.KubevirtV1().VirtualMachines(vm.Namespace).Get(context.Background(), vm.Name, metav1.GetOptions{})
+					Expect(err).NotTo(HaveOccurred())
+					Expect(vm).To(matcher.HaveConditionTrue(v1.VirtualMachineRestartRequired))
+				})
 			})
 
 			Context("Memory", func() {

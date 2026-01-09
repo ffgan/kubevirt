@@ -39,6 +39,7 @@ var _ = Describe("Arch Node Labeller", func() {
 	},
 		Entry(amd64, amd64, archLabellerAMD64{}),
 		Entry(arm64, arm64, archLabellerARM64{}),
+		Entry(riscv64, riscv64, archLabellerRISCV64{}),
 		Entry(s390x, s390x, archLabellerS390X{}),
 		Entry("unknown", "unknown", defaultArchLabeller{}),
 	)

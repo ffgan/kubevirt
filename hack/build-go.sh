@@ -148,7 +148,7 @@ for arg in $args; do
 
             # build virtctl for all architectures if requested
             if [ "${BIN_NAME}" = "virtctl" -a "${KUBEVIRT_RELEASE}" = "true" ]; then
-                for arch in amd64 arm64 s390x; do
+                for arch in amd64 arm64 s390x riscv64; do
                     for os in linux darwin windows; do
                         if [ "${os}" = "windows" ]; then
                             extension=".exe"
@@ -156,6 +156,9 @@ for arg in $args; do
                             extension=""
                         fi
                         if [ "${arch}" = "s390x" ] && [ "${os}" != "linux" ]; then
+                            continue
+                        fi
+                        if [ "${arch}" = "riscv64" ] && [ "${os}" != "linux" ]; then
                             continue
                         fi
 

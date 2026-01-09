@@ -115,7 +115,7 @@ var _ = Describe(SIG("[sig-compute]VNC", decorators.SigCompute, decorators.WgArm
 		// The default resolution is 720x400 for the vga/boch device used on amd64,
 		// while it is 1280x800 for the virtio device used on arm64 and s390x.
 		size := image.Point{720, 400}
-		if vmi.Spec.Architecture == "arm64" || vmi.Spec.Architecture == "s390x" {
+		if vmi.Spec.Architecture == "arm64" || vmi.Spec.Architecture == "riscv64" || vmi.Spec.Architecture == "s390x" {
 			size = image.Point{1280, 800}
 		}
 
