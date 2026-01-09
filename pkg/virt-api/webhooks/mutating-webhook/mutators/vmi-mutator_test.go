@@ -217,6 +217,7 @@ var _ = Describe("VirtualMachineInstance Mutator", func() {
 	},
 		Entry("when architecture is amd64", "amd64", v1.DefaultCPUModel, "q35"),
 		Entry("when architecture is arm64", "arm64", v1.CPUModeHostPassthrough, "virt"),
+		Entry("when architecture is riscv64", "riscv64", v1.CPUModeHostPassthrough, "virt"),
 		Entry("when architecture is s390x", "s390x", v1.DefaultCPUModel, "s390-ccw-virtio"),
 	)
 
@@ -234,6 +235,7 @@ var _ = Describe("VirtualMachineInstance Mutator", func() {
 	},
 		Entry("when architecture is amd64", "amd64", v1.DefaultCPUModel, "q35"),
 		Entry("when architecture is arm64", "arm64", v1.CPUModeHostPassthrough, "virt"),
+		Entry("when architecture is riscv64", "riscv64", v1.CPUModeHostPassthrough, "virt"),
 		Entry("when architecture is s390x", "s390x", v1.DefaultCPUModel, "s390-ccw-virtio"),
 	)
 
@@ -244,9 +246,10 @@ var _ = Describe("VirtualMachineInstance Mutator", func() {
 					CPUModel:   cpuModelFromConfig,
 					CPURequest: &cpuReq,
 					ArchitectureConfiguration: &v1.ArchConfiguration{
-						Amd64: &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
-						Arm64: &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
-						S390x: &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
+						Amd64:   &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
+						Arm64:   &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
+						Riscv64: &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
+						S390x:   &v1.ArchSpecificConfiguration{MachineType: machineTypeFromConfig},
 					},
 				},
 			},
@@ -262,6 +265,7 @@ var _ = Describe("VirtualMachineInstance Mutator", func() {
 		// Currently only Host-Passthrough is supported on Arm64, so you can only
 		// modify the CPU Model in a VMI yaml file, rather than in cluster config
 		Entry("on arm64", "arm64", v1.CPUModeHostPassthrough),
+		Entry("on riscv64", "riscv64", v1.CPUModeHostPassthrough),
 	)
 
 	DescribeTable("it should", func(given []v1.Volume, expected []v1.Volume) {
@@ -881,6 +885,13 @@ var _ = Describe("VirtualMachineInstance Mutator", func() {
 		Expect(vmiSpec.Domain.CPU.Model).To(Equal("host-passthrough"))
 	})
 
+	It("should convert cpu model, AutoattachGraphicsDevice and UEFI boot on riscv64", func() {
+		// turn on arm validation/mutation
+		_, vmiSpec, _ := getMetaSpecStatusFromAdmitWithArch("riscv64")
+		Expect(*(vmiSpec.Domain.Firmware.Bootloader.EFI.SecureBoot)).To(BeFalse())
+		Expect(vmiSpec.Domain.CPU.Model).To(Equal("host-passthrough"))
+	})
+
 	DescribeTable("should convert disk bus to virtio or scsi on ARM64", func(given v1.Disk, diskType string, expectedBus v1.DiskBus) {
 		vmi.Spec.Volumes = append(vmi.Spec.Volumes, v1.Volume{
 			Name: "a",
@@ -1437,6 +1448,7 @@ var _ = Describe("VirtualMachineInstance Mutator", func() {
 			Expect(spec.Domain.CPU.MaxSockets).To(Equal(uint32(0)))
 		},
 			Entry("arm64", "arm64"),
+			Entry("riscv64", "riscv64"),
 		)
 
 		DescribeTable("should leave MaxGuest unset on unsupported arch", func(arch string) {
@@ -1449,6 +1461,7 @@ var _ = Describe("VirtualMachineInstance Mutator", func() {
 			Expect(spec.Domain.Memory.MaxGuest).To(BeNil())
 		},
 			Entry("arm64", "arm64"),
+			Entry("riscv64", "riscv64"),
 			Entry("s390x", "s390x"),
 		)
 	})

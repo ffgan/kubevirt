@@ -74,7 +74,7 @@ func SetDefaultVirtualMachineInstance(clusterConfig *virtconfig.ClusterConfig, v
 	setCurrentCPUTopologyStatus(vmi)
 
 	// Hotplug needs to be enabled on ARM yet
-	if !IsARM64(&vmi.Spec) {
+	if !(IsARM64(&vmi.Spec) || IsRISCV64(&vmi.Spec)) {
 		setupHotplug(clusterConfig, vmi)
 	}
 
@@ -371,7 +371,7 @@ func setDefaultArchitectureFromDataSource(clusterConfig *virtconfig.ClusterConfi
 			continue
 		}
 		switch arch {
-		case "amd64", "arm64", "s390x":
+		case "amd64", "arm64", "s390x", "riscv64":
 			vm.Spec.Template.Spec.Architecture = arch
 		default:
 			log.Log.Warningf(ignoreUnknownArchFmt, arch, ds.Name, ds.Namespace)
