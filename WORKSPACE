@@ -418,8 +418,26 @@ oci_pull(
 
 oci_pull(
     name = "busybox",
-    digest = "sha256:545e6a6310a27636260920bc07b994a299b6708a1b26910cfefd335fdfb60d2b",
-    image = "registry.k8s.io/busybox",
+    digest = "sha256:e4749fb2291b57af91d8de04dd4664428b1f1cf49c257018a3153e722a6f21ae",
+    image = "busybox",
+)
+
+oci_pull(
+    name = "busybox_aarch64",
+    digest = "sha256:8e053939c416b9c59df14627bc6d0058534fc584374b15b495cac06550989524",
+    image = "busybox",
+)
+
+oci_pull(
+    name = "busybox_s390x",
+    digest = "sha256:2278a3fe95e26af2ea42f10d9dbd4f0ab3aab949a815f773066bcedd05df4c6b",
+    image = "busybox",
+)
+
+oci_pull(
+    name = "busybox_riscv64",
+    digest = "sha256:1e917f6c9a46e32fa07b738e1f6d5f41a9843a57521fcd7fea293d25dd58c275",
+    image = "busybox",
 )
 
 http_archive(

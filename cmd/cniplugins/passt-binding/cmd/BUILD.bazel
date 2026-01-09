@@ -33,7 +33,12 @@ pkg_tar(
 
 oci_image(
     name = "network-passt-binding-cni-image",
-    base = "@busybox",
+    base = select({
+        "@io_bazel_rules_go//go/platform:linux_arm64": "@busybox_aarch64",
+        "@io_bazel_rules_go//go/platform:linux_s390x": "@busybox_s390x",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "@busybox_riscv64",
+        "//conditions:default": "@busybox",
+    }),
     entrypoint = ["/cni/kubevirt-passt-binding"],
     tars = [
         ":passt-binding-tar",
