@@ -42,30 +42,30 @@ go_binary(
 #     visibility = ["//visibility:public"],
 # )
 
-go_cross_binary(
-    name = "virtctl-amd64",
-    platform = "@io_bazel_rules_go//go/toolchain:linux_amd64",
-    target = ":virtctl",
-    visibility = ["//visibility:public"],
-)
+# go_cross_binary(
+#     name = "virtctl-amd64",
+#     platform = "@io_bazel_rules_go//go/toolchain:linux_amd64",
+#     target = ":virtctl",
+#     visibility = ["//visibility:public"],
+# )
 
-go_cross_binary(
-    name = "virtctl-arm64",
-    platform = "@io_bazel_rules_go//go/toolchain:linux_arm64",
-    target = ":virtctl",
-    visibility = ["//visibility:public"],
-)
+# go_cross_binary(
+#     name = "virtctl-arm64",
+#     platform = "@io_bazel_rules_go//go/toolchain:linux_arm64",
+#     target = ":virtctl",
+#     visibility = ["//visibility:public"],
+# )
 
-go_cross_binary(
-    name = "virtctl-riscv64",
-    platform = "@io_bazel_rules_go//go/toolchain:linux_riscv64",
-    target = ":virtctl",
-    visibility = ["//visibility:public"],
-)
+# go_cross_binary(
+#     name = "virtctl-riscv64",
+#     platform = "@io_bazel_rules_go//go/toolchain:linux_riscv64",
+#     target = ":virtctl",
+#     visibility = ["//visibility:public"],
+# )
 
-go_cross_binary(
-    name = "virtctl-s390x",
-    platform = "@io_bazel_rules_go//go/toolchain:linux_s390x",
-    target = ":virtctl",
-    visibility = ["//visibility:public"],
-)
+# go_cross_binary(
+#     name = "virtctl-s390x",
+#     platform = "@io_bazel_rules_go//go/toolchain:linux_s390x",
+#     target = ":virtctl",
+#     visibility = ["//visibility:public"],
+# )
