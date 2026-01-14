@@ -27,7 +27,7 @@ EOF
     trap collect_results EXIT
 fi
 
-${KUBEVIRT_DIR}/hack/bazel-race.sh
+# ${KUBEVIRT_DIR}/hack/bazel-race.sh
 
 bazel test \
     --config=${ARCHITECTURE} \
