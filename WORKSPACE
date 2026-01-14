@@ -370,8 +370,9 @@ oci_pull(
 
 oci_pull(
     name = "go_image_base_riscv64",
-    digest = "sha256:95c1947e98bce1a0f4815ef1bf2f29760502d82d2f3fb841d23970fd0f6f80af",
-    image = "registry.risc-vers.cn/wg-cloudcomputing/debian",
+    # debian 13.3-slim
+    digest = "sha256:d09628196f9c699984e3e4ed84e27b0dbeafedcaa4abd329d276be2d36ce7e91",
+    image = "debian",
 )
 
 # Pull fedora container-disk preconfigured with ci tooling
