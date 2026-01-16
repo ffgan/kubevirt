@@ -62,6 +62,24 @@ if [[ "${ARCHITECTURE}" != "s390x" && "${ARCHITECTURE}" != "crossbuild-s390x" ]]
     "
 fi
 
+if [[ "${ARCHITECTURE}" = "riscv64" || "${ARCHITECTURE}" = "crossbuild-riscv64" ]]; then
+    default_targets="
+    virt-operator
+    virt-api
+    virt-controller
+    virt-handler
+    virt-launcher
+    virt-exportserver
+    virt-exportproxy
+    virt-synchronization-controller
+
+    alpine-container-disk-demo
+    vm-killer
+    sidecar-shim
+    disks-images-provider
+    "
+fi
+
 PUSH_TARGETS=(${PUSH_TARGETS:-${default_targets}})
 
 for tag in ${docker_tag} ${docker_tag_alt}; do
