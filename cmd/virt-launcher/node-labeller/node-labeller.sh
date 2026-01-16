@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -xeo pipefail
-
+/usr/sbin/libvirtd -d
 ARCH=$(uname -m)
 MACHINE=q35
 if [ "$ARCH" == "aarch64" ]; then
@@ -46,3 +46,4 @@ if [ "$ARCH" == "x86_64" ] || [ "$ARCH" == "s390x" ]; then
 fi
 
 virsh capabilities > /var/lib/kubevirt-node-labeller/capabilities.xml
+pkill libvirtd
