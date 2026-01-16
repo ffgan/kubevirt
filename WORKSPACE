@@ -370,9 +370,8 @@ oci_pull(
 
 oci_pull(
     name = "go_image_base_riscv64",
-    # debian 13.3-slim
-    digest = "sha256:d09628196f9c699984e3e4ed84e27b0dbeafedcaa4abd329d276be2d36ce7e91",
-    image = "debian",
+    digest = "sha256:9cd3a3060f7ef8c157ebc6475ae42af23640978ccb354379b391f9021fad09d7",
+    image = "docker.io/escapable/debian-self-host",
 )
 
 # Pull fedora container-disk preconfigured with ci tooling
